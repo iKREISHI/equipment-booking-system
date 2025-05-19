@@ -12,7 +12,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
 from apps.users.validators.user_validators import validate_last_name, validate_first_name, validate_patronymic, \
-    validate_gender
+    validate_gender, validate_phone
 
 
 class UserManager(BaseUserManager):
@@ -122,6 +122,24 @@ class User(AbstractBaseUser, PermissionsMixin):
         error_messages={
             'required': 'Пожалуйста, заполните поле пароля.',
         }
+    )
+    email = models.EmailField(
+        blank=True,
+        null=True,
+        verbose_name=_("Почта")
+    )
+    phone = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True,
+        verbose_name=_("Номер телефона"),
+        validators=[validate_phone],
+    )
+    telegram_chat_id = models.CharField(
+        null=True,
+        blank=True,
+        verbose_name='Чат ID телеграмма для отправки уведомлений',
+        max_length=255,
     )
     date_joined = models.DateTimeField(
         verbose_name='Дата создания аккаунта',
