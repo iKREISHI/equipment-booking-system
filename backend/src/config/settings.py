@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'apps.locations.apps.LocationsConfig',
     'apps.equipments.apps.EquipmentsConfig',
     'apps.reservations.apps.ReservationsConfig',
+    'apps.maintenance.apps.MaintenanceConfig',
 
     # dependencies
     'rest_framework',
