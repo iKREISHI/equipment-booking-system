@@ -33,6 +33,8 @@ class InventoryEquipmentAdmin(admin.ModelAdmin):
     search_fields = (
         'name',
         'inventory_number',
+        'created_at',
+        'updated_at',
     )
     list_filter = (
         'status',
@@ -51,6 +53,8 @@ class InventoryEquipmentAdmin(admin.ModelAdmin):
                 'description',
                 'status',
                 'location',
+                'created_at',
+                'updated_at',
             ),
         }),
     )
