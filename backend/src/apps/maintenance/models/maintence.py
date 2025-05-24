@@ -13,12 +13,14 @@ class Maintenance(models.Model):
         verbose_name='Инвентарное оборудование',
     )
     reporter_by = models.ForeignKey(
-        User,
+       'users.User',
+        related_name='maintenance_reporter_by',
         on_delete=models.PROTECT,
         verbose_name='Кто сообщил о проверке оборудования',
     )
     assigned_by = models.ForeignKey(
-        User,
+        'users.User',
+        related_name='maintenance_assigned_by',
         on_delete=models.PROTECT,
         verbose_name='Кто проверил исправность оборудования',
     )
