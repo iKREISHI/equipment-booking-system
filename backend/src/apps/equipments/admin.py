@@ -40,7 +40,7 @@ class InventoryEquipmentAdmin(admin.ModelAdmin):
         'status',
         'location',
     )
-    readonly_fields = ('registration_date',)
+    readonly_fields = ('registration_date', 'created_at', 'updated_at')
     ordering = ('name',)
     date_hierarchy = 'registration_date'
     fieldsets = (
@@ -53,8 +53,6 @@ class InventoryEquipmentAdmin(admin.ModelAdmin):
                 'description',
                 'status',
                 'location',
-                'created_at',
-                'updated_at',
             ),
         }),
     )

@@ -35,6 +35,30 @@ class Maintenance(models.Model):
         verbose_name='Статус обслуживания',
     )
 
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата и время создания <UNK> <UNK>',
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name='Дата и время обновления',
+    )
+
+    description_updated = models.TextField(
+        verbose_name='Описание обновления',
+        blank=True,
+        null=True,
+    )
+
+    start_time = models.DateTimeField(
+        verbose_name='Дата и время начала обслуживания',
+    )
+
+    end_time = models.DateTimeField(
+        verbose_name='Дата и время конца обслуживания',
+    )
+
     def __str__(self):
         return f"{self.equipment} - {self.status}"
 
