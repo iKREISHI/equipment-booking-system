@@ -10,9 +10,9 @@ migrate:
 	uv run src/manage.py migrate
 
 entrypoint:
-	uv run src/entrypoints
+	uv run src/manage.py entrypoint
 
-startapp: sync migrate
+startapp: sync migrate entrypoint
 
 runserver:
 	uv run src/manage.py runserver
