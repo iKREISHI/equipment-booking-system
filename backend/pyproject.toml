@@ -9,5 +9,6 @@ dependencies = [
     "django-filter>=25.1",
     "djangorestframework>=3.16.0",
     "drf-spectacular>=0.28.0",
+    "drf-spectacular-sidecar>=2025.5.1",
     "pillow>=11.2.1",
 ]
