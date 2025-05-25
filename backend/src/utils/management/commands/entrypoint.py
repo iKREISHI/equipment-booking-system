@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from django.conf import settings
-from entrypoints.main import main as entrypoint_main
+from utils.entrypoints.main import main as entrypoint_main
 
 class Command(BaseCommand):
     help = 'Описание вашей команды entrypoint'

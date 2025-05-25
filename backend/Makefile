@@ -12,6 +12,7 @@ migrate:
 	uv run src/manage.py migrate
 
 entrypoint:
+	uv run src/manage.py create_groups
 	uv run src/manage.py entrypoint
 
 startapp: sync migrate entrypoint collect-static
