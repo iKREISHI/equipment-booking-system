@@ -3,8 +3,6 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, APITestCase, force_authenticate
-
-# ⚠️ проверьте импорт, путь зависит от вашего проекта
 from api.v0.views.users.users import UserAdminViewSet
 
 User = get_user_model()
