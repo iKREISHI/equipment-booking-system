@@ -1,4 +1,5 @@
 from rest_framework import viewsets, status
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from rest_framework.response import Response
 from drf_spectacular.utils import (
     extend_schema,
@@ -84,7 +85,7 @@ class UserAdminViewSet(viewsets.ModelViewSet):
     * члены групп **«Администратор системы»** или **«Модератор»**.
     """
     queryset = User.objects.all().order_by("id")
-    permission_classes = [IsSuperuserOrSystemAdmin]
+    permission_classes = [IsAuthenticated, DjangoModelPermissions, IsSuperuserOrSystemAdmin]
     pagination_class = StandardResultsSetPagination
 
     # --------------------------------------------------------------------- #
