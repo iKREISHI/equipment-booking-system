@@ -77,6 +77,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
                 password=password,
                 **validated_data
             )
+            user.is_active = False
+            user.save()
         except DjangoValidationError as e:
             raise serializers.ValidationError({'password': list(e.messages)})
 
