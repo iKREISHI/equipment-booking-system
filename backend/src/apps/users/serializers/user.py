@@ -19,3 +19,6 @@ class SmallUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email',]
         read_only_fields = ['id']
+
+class SetActiveSerializer(serializers.Serializer):
+    is_active = serializers.BooleanField(required=True)
