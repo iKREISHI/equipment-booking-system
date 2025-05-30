@@ -30,6 +30,7 @@ dependencies = [
     { name = "djangorestframework" },
     { name = "drf-spectacular" },
     { name = "drf-spectacular-sidecar" },
+    { name = "model-bakery" },
     { name = "pillow" },
 ]
 
@@ -40,6 +41,7 @@ requires-dist = [
     { name = "djangorestframework", specifier = ">=3.16.0" },
     { name = "drf-spectacular", specifier = ">=0.28.0" },
     { name = "drf-spectacular-sidecar", specifier = ">=2025.5.1" },
+    { name = "model-bakery", specifier = ">=1.20.4" },
     { name = "pillow", specifier = ">=11.2.1" },
 ]
 
@@ -144,6 +146,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/bf/ce/46fbd9c8119cfc3581ee5643ea49464d168028cfb5caff5fc0596d0cf914/jsonschema_specifications-2025.4.1.tar.gz", hash = "sha256:630159c9f4dbea161a6a2205c3011cc4f18ff381b189fff48bb39b9bf26ae608", size = 15513, upload-time = "2025-04-23T12:34:07.418Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/01/0e/b27cdbaccf30b890c40ed1da9fd4a3593a5cf94dae54fb34f8a4b74fcd3f/jsonschema_specifications-2025.4.1-py3-none-any.whl", hash = "sha256:4653bffbd6584f7de83a67e0d620ef16900b390ddc7939d56684d6c81e33f1af", size = 18437, upload-time = "2025-04-23T12:34:05.422Z" },
+]
+
+[[package]]
+name = "model-bakery"
+version = "1.20.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/05/dc/6d6260fa30c4d041958f71d6790b722e6f2588fbbca0534779b81a83b66d/model_bakery-1.20.4.tar.gz", hash = "sha256:a0c97e8a27329ecad78136f9d8f573ae392e4282326ea5c5f6daed1173013c4e", size = 21147, upload-time = "2025-02-26T20:10:05.713Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/81/23/9b30a9c70e1a6df5100ae8c440b98fc1da6a4ce195327a7fba399569a2ec/model_bakery-1.20.4-py3-none-any.whl", hash = "sha256:30ad372604f326a1ba9f949bad9d0f85e6a510db4ef6a0b07be2d6bd7485008b", size = 24154, upload-time = "2025-02-26T20:10:03.988Z" },
 ]
 
 [[package]]
