@@ -1,4 +1,8 @@
 from rest_framework.routers import DefaultRouter
+
+from api.v0.views.maintenance.maintenance import MaintenanceViewSet
+from api.v0.views.maintenance.maintenance_status import MaintenanceStatusViewSet
+from api.v0.views.reservations.reservations import ReservationViewSet
 from api.v0.views.users.login import LoginViewSet
 from api.v0.views.users.logout import LogoutViewSet
 from api.v0.views.users.registration import RegistrationViewSet
@@ -16,6 +20,9 @@ router.register('users', UserAdminViewSet, basename='users')
 router.register('location', LocationViewSet, basename='locations')
 router.register('inventory-equipment-status', InventoryEquipmentStatusViewSet, basename='inventory-equipment-status')
 router.register('inventory-equipment', InventoryEquipmentViewSet, basename='inventory-equipment')
+router.register(r"reservation", ReservationViewSet, basename="reservation")
+router.register(r'maintenance-status', MaintenanceStatusViewSet, basename='maintenance-status')
+router.register(r'maintenance', MaintenanceViewSet, basename='maintenance')
 
 urlpatterns = [
 
