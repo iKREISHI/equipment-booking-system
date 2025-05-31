@@ -1,2 +1,2 @@
 from .maintenance_status import MaintenanceStatus
-from .maintence import Maintenance
+from .maintenance import Maintenance

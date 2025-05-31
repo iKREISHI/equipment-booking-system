@@ -1,6 +1,6 @@
 from django.contrib import admin
 from apps.maintenance.models.maintenance_status import MaintenanceStatus
-from apps.maintenance.models.maintence import Maintenance
+from apps.maintenance.models.maintenance import Maintenance
 
 
 @admin.register(MaintenanceStatus)
