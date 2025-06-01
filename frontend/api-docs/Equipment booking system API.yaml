@@ -1,0 +1,2364 @@
+openapi: 3.0.3
+info:
+  title: Equipment booking system API
+  version: 1.0.0
+  description: Equipment booking system for Technopark SHSPU
+paths:
+  /api/v0/inventory-equipment/:
+    get:
+      operationId: v0_inventory_equipment_list
+      description: |-
+        Поддерживает фильтры:
+        - `owner` — ID владельца
+        - `status` — ID статуса
+        - `location` — ID местоположения
+
+        И поиск по `name` или `inventory_number` через `?search=`.
+      summary: Список инвентарного оборудования
+      parameters:
+      - in: query
+        name: location
+        schema:
+          type: integer
+      - in: query
+        name: owner
+        schema:
+          type: integer
+      - in: query
+        name: page
+        schema:
+          type: integer
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+      - in: query
+        name: search
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: integer
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInventoryEquipmentList'
+          description: ''
+    post:
+      operationId: v0_inventory_equipment_create
+      description: |-
+        CRUD-эндпоинт для **InventoryEquipment**.
+
+        | Операция               | Model-permission |
+        |------------------------|------------------|
+        | list / retrieve        | `view_inventoryequipment` |
+        | create                 | `add_inventoryequipment` |
+        | update / partial_update| `change_inventoryequipment` |
+        | destroy                | `delete_inventoryequipment` |
+      summary: Создать оборудование
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryEquipment'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: Создано
+        '400':
+          description: Ошибки валидации
+  /api/v0/inventory-equipment-status/:
+    get:
+      operationId: v0_inventory_equipment_status_list
+      description: |-
+        CRUD эндпоинт для **InventoryEquipmentStatus**.
+
+        | Операция               | Требуемая permission |
+        |------------------------|----------------------|
+        | list / retrieve        | `view_inventoryequipmentstatus` |
+        | create                 | `add_inventoryequipmentstatus` |
+        | update / partial_update| `change_inventoryequipmentstatus` |
+        | destroy                | `delete_inventoryequipmentstatus` |
+      summary: Список статусов оборудования
+      parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: Номер страницы (≥ 1)
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: Размер страницы (по умолчанию 20, максимум 100)
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInventoryEquipmentStatusList'
+          description: ''
+    post:
+      operationId: v0_inventory_equipment_status_create
+      description: |-
+        CRUD эндпоинт для **InventoryEquipmentStatus**.
+
+        | Операция               | Требуемая permission |
+        |------------------------|----------------------|
+        | list / retrieve        | `view_inventoryequipmentstatus` |
+        | create                 | `add_inventoryequipmentstatus` |
+        | update / partial_update| `change_inventoryequipmentstatus` |
+        | destroy                | `delete_inventoryequipmentstatus` |
+      summary: Создать статус
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryEquipmentStatus'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: Создано
+        '400':
+          description: Ошибки валидации
+  /api/v0/inventory-equipment-status/{id}/:
+    get:
+      operationId: v0_inventory_equipment_status_retrieve
+      description: |-
+        CRUD эндпоинт для **InventoryEquipmentStatus**.
+
+        | Операция               | Требуемая permission |
+        |------------------------|----------------------|
+        | list / retrieve        | `view_inventoryequipmentstatus` |
+        | create                 | `add_inventoryequipmentstatus` |
+        | update / partial_update| `change_inventoryequipmentstatus` |
+        | destroy                | `delete_inventoryequipmentstatus` |
+      summary: Детали статуса
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Статус инвентарного оборудования.
+        required: true
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryEquipmentStatus'
+          description: ''
+        '404':
+          description: Не найдено
+    put:
+      operationId: v0_inventory_equipment_status_update
+      description: |-
+        CRUD эндпоинт для **InventoryEquipmentStatus**.
+
+        | Операция               | Требуемая permission |
+        |------------------------|----------------------|
+        | list / retrieve        | `view_inventoryequipmentstatus` |
+        | create                 | `add_inventoryequipmentstatus` |
+        | update / partial_update| `change_inventoryequipmentstatus` |
+        | destroy                | `delete_inventoryequipmentstatus` |
+      summary: Полное обновление статуса
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Статус инвентарного оборудования.
+        required: true
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryEquipmentStatus'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryEquipmentStatus'
+          description: ''
+    patch:
+      operationId: v0_inventory_equipment_status_partial_update
+      description: |-
+        CRUD эндпоинт для **InventoryEquipmentStatus**.
+
+        | Операция               | Требуемая permission |
+        |------------------------|----------------------|
+        | list / retrieve        | `view_inventoryequipmentstatus` |
+        | create                 | `add_inventoryequipmentstatus` |
+        | update / partial_update| `change_inventoryequipmentstatus` |
+        | destroy                | `delete_inventoryequipmentstatus` |
+      summary: Частичное обновление статуса
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Статус инвентарного оборудования.
+        required: true
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedInventoryEquipmentStatus'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryEquipmentStatus'
+          description: ''
+    delete:
+      operationId: v0_inventory_equipment_status_destroy
+      description: |-
+        CRUD эндпоинт для **InventoryEquipmentStatus**.
+
+        | Операция               | Требуемая permission |
+        |------------------------|----------------------|
+        | list / retrieve        | `view_inventoryequipmentstatus` |
+        | create                 | `add_inventoryequipmentstatus` |
+        | update / partial_update| `change_inventoryequipmentstatus` |
+        | destroy                | `delete_inventoryequipmentstatus` |
+      summary: Удалить статус
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Статус инвентарного оборудования.
+        required: true
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v0/inventory-equipment/{id}/:
+    get:
+      operationId: v0_inventory_equipment_retrieve
+      description: |-
+        CRUD-эндпоинт для **InventoryEquipment**.
+
+        | Операция               | Model-permission |
+        |------------------------|------------------|
+        | list / retrieve        | `view_inventoryequipment` |
+        | create                 | `add_inventoryequipment` |
+        | update / partial_update| `change_inventoryequipment` |
+        | destroy                | `delete_inventoryequipment` |
+      summary: Детали оборудования
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Инвентарное оборудование.
+        required: true
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryEquipment'
+          description: ''
+        '404':
+          description: Не найдено
+    put:
+      operationId: v0_inventory_equipment_update
+      description: |-
+        CRUD-эндпоинт для **InventoryEquipment**.
+
+        | Операция               | Model-permission |
+        |------------------------|------------------|
+        | list / retrieve        | `view_inventoryequipment` |
+        | create                 | `add_inventoryequipment` |
+        | update / partial_update| `change_inventoryequipment` |
+        | destroy                | `delete_inventoryequipment` |
+      summary: Полное обновление оборудования
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Инвентарное оборудование.
+        required: true
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryEquipment'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryEquipment'
+          description: ''
+    patch:
+      operationId: v0_inventory_equipment_partial_update
+      description: |-
+        CRUD-эндпоинт для **InventoryEquipment**.
+
+        | Операция               | Model-permission |
+        |------------------------|------------------|
+        | list / retrieve        | `view_inventoryequipment` |
+        | create                 | `add_inventoryequipment` |
+        | update / partial_update| `change_inventoryequipment` |
+        | destroy                | `delete_inventoryequipment` |
+      summary: Частичное обновление оборудования
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Инвентарное оборудование.
+        required: true
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedInventoryEquipment'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryEquipment'
+          description: ''
+    delete:
+      operationId: v0_inventory_equipment_destroy
+      description: |-
+        CRUD-эндпоинт для **InventoryEquipment**.
+
+        | Операция               | Model-permission |
+        |------------------------|------------------|
+        | list / retrieve        | `view_inventoryequipment` |
+        | create                 | `add_inventoryequipment` |
+        | update / partial_update| `change_inventoryequipment` |
+        | destroy                | `delete_inventoryequipment` |
+      summary: Удалить оборудование
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Инвентарное оборудование.
+        required: true
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v0/location/:
+    get:
+      operationId: v0_location_list
+      description: |-
+        Полноценный CRUD для *Location*.
+
+        | Операция  | Требуемое model-permission |
+        |-----------|---------------------------|
+        | list / retrieve | `view_location` |
+        | create | `add_location` |
+        | update / partial_update | `change_location` |
+        | destroy | `delete_location` |
+      summary: Список местоположений
+      parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: Номер страницы (≥ 1)
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: Размер страницы (по умолчанию 20, максимум 100)
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLocationList'
+          description: ''
+    post:
+      operationId: v0_location_create
+      description: |-
+        Полноценный CRUD для *Location*.
+
+        | Операция  | Требуемое model-permission |
+        |-----------|---------------------------|
+        | list / retrieve | `view_location` |
+        | create | `add_location` |
+        | update / partial_update | `change_location` |
+        | destroy | `delete_location` |
+      summary: Создать местоположение
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Location'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: Создано
+        '400':
+          description: Ошибки валидации
+  /api/v0/location/{id}/:
+    get:
+      operationId: v0_location_retrieve
+      description: |-
+        Полноценный CRUD для *Location*.
+
+        | Операция  | Требуемое model-permission |
+        |-----------|---------------------------|
+        | list / retrieve | `view_location` |
+        | create | `add_location` |
+        | update / partial_update | `change_location` |
+        | destroy | `delete_location` |
+      summary: Детали местоположения
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Местоположение инвентарного
+          оборудования.
+        required: true
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+          description: ''
+        '404':
+          description: Не найдено
+    put:
+      operationId: v0_location_update
+      description: |-
+        Полноценный CRUD для *Location*.
+
+        | Операция  | Требуемое model-permission |
+        |-----------|---------------------------|
+        | list / retrieve | `view_location` |
+        | create | `add_location` |
+        | update / partial_update | `change_location` |
+        | destroy | `delete_location` |
+      summary: Полное обновление
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Местоположение инвентарного
+          оборудования.
+        required: true
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Location'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+          description: ''
+    patch:
+      operationId: v0_location_partial_update
+      description: |-
+        Полноценный CRUD для *Location*.
+
+        | Операция  | Требуемое model-permission |
+        |-----------|---------------------------|
+        | list / retrieve | `view_location` |
+        | create | `add_location` |
+        | update / partial_update | `change_location` |
+        | destroy | `delete_location` |
+      summary: Частичное обновление
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Местоположение инвентарного
+          оборудования.
+        required: true
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedLocation'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+          description: ''
+    delete:
+      operationId: v0_location_destroy
+      description: |-
+        Полноценный CRUD для *Location*.
+
+        | Операция  | Требуемое model-permission |
+        |-----------|---------------------------|
+        | list / retrieve | `view_location` |
+        | create | `add_location` |
+        | update / partial_update | `change_location` |
+        | destroy | `delete_location` |
+      summary: Удалить местоположение
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Местоположение инвентарного
+          оборудования.
+        required: true
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v0/login/:
+    post:
+      operationId: v0_login_create
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                  user_id:
+                    type: integer
+                  username:
+                    type: string
+                example:
+                  detail: Успешный вход
+                  user_id: 1
+                  username: admin
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                example:
+                  detail: Вы уже авторизованы
+          description: ''
+  /api/v0/logout/:
+    post:
+      operationId: v0_logout_create
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          description: No response body
+  /api/v0/maintenance/:
+    get:
+      operationId: v0_maintenance_list
+      description: |-
+        CRUD-эндпоинт для модели **Maintenance**.
+
+        | Операция               | Требуемая permission                 |
+        |------------------------|--------------------------------------|
+        | list / retrieve        | `view_maintenance`                   |
+        | create                 | `add_maintenance`                    |
+        | update / partial_update| `change_maintenance`                 |
+        | destroy                | `delete_maintenance`                 |
+      summary: Список записей обслуживания оборудования
+      parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: Номер страницы (≥ 1)
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: Размер страницы (по умолчанию 20, максимум 100)
+      tags:
+      - v0
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMaintenanceList'
+          description: ''
+    post:
+      operationId: v0_maintenance_create
+      description: |-
+        CRUD-эндпоинт для модели **Maintenance**.
+
+        | Операция               | Требуемая permission                 |
+        |------------------------|--------------------------------------|
+        | list / retrieve        | `view_maintenance`                   |
+        | create                 | `add_maintenance`                    |
+        | update / partial_update| `change_maintenance`                 |
+        | destroy                | `delete_maintenance`                 |
+      summary: Создать новую запись обслуживания
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Maintenance'
+        required: true
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          description: Создано
+        '400':
+          description: Ошибки валидации
+  /api/v0/maintenance-status/:
+    get:
+      operationId: v0_maintenance_status_list
+      description: |-
+        CRUD эндпоинт для **MaintenanceStatus**.
+
+        | Операция               | Требуемая permission                         |
+        |------------------------|----------------------------------------------|
+        | list / retrieve        | `view_maintenancestatus`                    |
+        | create                 | `add_maintenancestatus`                     |
+        | update / partial_update| `change_maintenancestatus`                  |
+        | destroy                | `delete_maintenancestatus`                  |
+      summary: Список статусов обслуживания оборудования
+      parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: Номер страницы (≥ 1)
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: Размер страницы (по умолчанию 20, максимум 100)
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMaintenanceStatusList'
+          description: ''
+    post:
+      operationId: v0_maintenance_status_create
+      description: |-
+        CRUD эндпоинт для **MaintenanceStatus**.
+
+        | Операция               | Требуемая permission                         |
+        |------------------------|----------------------------------------------|
+        | list / retrieve        | `view_maintenancestatus`                    |
+        | create                 | `add_maintenancestatus`                     |
+        | update / partial_update| `change_maintenancestatus`                  |
+        | destroy                | `delete_maintenancestatus`                  |
+      summary: Создать статус обслуживания оборудования
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaintenanceStatus'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          description: Создано
+        '400':
+          description: Ошибки валидации
+  /api/v0/maintenance-status/{id}/:
+    get:
+      operationId: v0_maintenance_status_retrieve
+      description: |-
+        CRUD эндпоинт для **MaintenanceStatus**.
+
+        | Операция               | Требуемая permission                         |
+        |------------------------|----------------------------------------------|
+        | list / retrieve        | `view_maintenancestatus`                    |
+        | create                 | `add_maintenancestatus`                     |
+        | update / partial_update| `change_maintenancestatus`                  |
+        | destroy                | `delete_maintenancestatus`                  |
+      summary: Детали статуса обслуживания оборудования
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Статус оборудования.
+        required: true
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaintenanceStatus'
+          description: ''
+        '404':
+          description: Не найдено
+    put:
+      operationId: v0_maintenance_status_update
+      description: |-
+        CRUD эндпоинт для **MaintenanceStatus**.
+
+        | Операция               | Требуемая permission                         |
+        |------------------------|----------------------------------------------|
+        | list / retrieve        | `view_maintenancestatus`                    |
+        | create                 | `add_maintenancestatus`                     |
+        | update / partial_update| `change_maintenancestatus`                  |
+        | destroy                | `delete_maintenancestatus`                  |
+      summary: Полное обновление статуса обслуживания оборудования
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Статус оборудования.
+        required: true
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaintenanceStatus'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaintenanceStatus'
+          description: ''
+    patch:
+      operationId: v0_maintenance_status_partial_update
+      description: |-
+        CRUD эндпоинт для **MaintenanceStatus**.
+
+        | Операция               | Требуемая permission                         |
+        |------------------------|----------------------------------------------|
+        | list / retrieve        | `view_maintenancestatus`                    |
+        | create                 | `add_maintenancestatus`                     |
+        | update / partial_update| `change_maintenancestatus`                  |
+        | destroy                | `delete_maintenancestatus`                  |
+      summary: Частичное обновление статуса обслуживания оборудования
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Статус оборудования.
+        required: true
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMaintenanceStatus'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaintenanceStatus'
+          description: ''
+    delete:
+      operationId: v0_maintenance_status_destroy
+      description: |-
+        CRUD эндпоинт для **MaintenanceStatus**.
+
+        | Операция               | Требуемая permission                         |
+        |------------------------|----------------------------------------------|
+        | list / retrieve        | `view_maintenancestatus`                    |
+        | create                 | `add_maintenancestatus`                     |
+        | update / partial_update| `change_maintenancestatus`                  |
+        | destroy                | `delete_maintenancestatus`                  |
+      summary: Удалить статус обслуживания оборудования
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Статус оборудования.
+        required: true
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v0/maintenance/{id}/:
+    get:
+      operationId: v0_maintenance_retrieve
+      description: |-
+        CRUD-эндпоинт для модели **Maintenance**.
+
+        | Операция               | Требуемая permission                 |
+        |------------------------|--------------------------------------|
+        | list / retrieve        | `view_maintenance`                   |
+        | create                 | `add_maintenance`                    |
+        | update / partial_update| `change_maintenance`                 |
+        | destroy                | `delete_maintenance`                 |
+      summary: Детали одной записи обслуживания
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Обслуживание оборудования.
+        required: true
+      tags:
+      - v0
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Maintenance'
+          description: ''
+        '404':
+          description: Не найдено
+    put:
+      operationId: v0_maintenance_update
+      description: |-
+        CRUD-эндпоинт для модели **Maintenance**.
+
+        | Операция               | Требуемая permission                 |
+        |------------------------|--------------------------------------|
+        | list / retrieve        | `view_maintenance`                   |
+        | create                 | `add_maintenance`                    |
+        | update / partial_update| `change_maintenance`                 |
+        | destroy                | `delete_maintenance`                 |
+      summary: Полное обновление записи обслуживания
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Обслуживание оборудования.
+        required: true
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Maintenance'
+        required: true
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Maintenance'
+          description: ''
+    patch:
+      operationId: v0_maintenance_partial_update
+      description: |-
+        CRUD-эндпоинт для модели **Maintenance**.
+
+        | Операция               | Требуемая permission                 |
+        |------------------------|--------------------------------------|
+        | list / retrieve        | `view_maintenance`                   |
+        | create                 | `add_maintenance`                    |
+        | update / partial_update| `change_maintenance`                 |
+        | destroy                | `delete_maintenance`                 |
+      summary: Частичное обновление записи обслуживания
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Обслуживание оборудования.
+        required: true
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMaintenance'
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Maintenance'
+          description: ''
+    delete:
+      operationId: v0_maintenance_destroy
+      description: |-
+        CRUD-эндпоинт для модели **Maintenance**.
+
+        | Операция               | Требуемая permission                 |
+        |------------------------|--------------------------------------|
+        | list / retrieve        | `view_maintenance`                   |
+        | create                 | `add_maintenance`                    |
+        | update / partial_update| `change_maintenance`                 |
+        | destroy                | `delete_maintenance`                 |
+      summary: Удалить запись обслуживания
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Обслуживание оборудования.
+        required: true
+      tags:
+      - v0
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v0/registration/:
+    post:
+      operationId: v0_registration_create
+      description: |-
+        Регистрация нового пользователя.
+
+        После успешного создания аккаунт помечается как `is_active=False`
+        (это делает сам сериализатор)
+      summary: Регистрация пользователя
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          description: Аккаунт создан (по умолчанию не активен)
+        '400':
+          description: Ошибки валидации данных
+  /api/v0/reservation/:
+    get:
+      operationId: v0_reservation_list
+      description: |-
+        Фильтры по полям `equipment`, `renter`, `assigned_by`, `location`.
+        Поиск по описанию через `?search=`.
+        Постраничная отдача.
+      summary: Список бронирований
+      parameters:
+      - in: query
+        name: assigned_by
+        schema:
+          type: integer
+      - in: query
+        name: equipment
+        schema:
+          type: integer
+      - in: query
+        name: location
+        schema:
+          type: integer
+      - in: query
+        name: page
+        schema:
+          type: integer
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+      - in: query
+        name: renter
+        schema:
+          type: integer
+      - in: query
+        name: search
+        schema:
+          type: string
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedReservationList'
+          description: ''
+    post:
+      operationId: v0_reservation_create
+      description: |-
+        CRUD для модели Reservation (аренды оборудования).
+
+        • list/retrieve — право `view_reservation`
+        • create         — право `add_reservation`
+        • update/patch   — право `change_reservation`
+        • destroy        — право `delete_reservation`
+      summary: Создать бронирование
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reservation'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: Бронирование создано
+        '400':
+          description: Ошибки валидации
+  /api/v0/reservation/{id}/:
+    get:
+      operationId: v0_reservation_retrieve
+      description: |-
+        CRUD для модели Reservation (аренды оборудования).
+
+        • list/retrieve — право `view_reservation`
+        • create         — право `add_reservation`
+        • update/patch   — право `change_reservation`
+        • destroy        — право `delete_reservation`
+      summary: Детали бронирования
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Аренда инвентарного оборудования.
+        required: true
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+          description: ''
+        '404':
+          description: Не найдено
+    put:
+      operationId: v0_reservation_update
+      description: |-
+        CRUD для модели Reservation (аренды оборудования).
+
+        • list/retrieve — право `view_reservation`
+        • create         — право `add_reservation`
+        • update/patch   — право `change_reservation`
+        • destroy        — право `delete_reservation`
+      summary: Полное обновление бронирования
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Аренда инвентарного оборудования.
+        required: true
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reservation'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+          description: ''
+    patch:
+      operationId: v0_reservation_partial_update
+      description: |-
+        CRUD для модели Reservation (аренды оборудования).
+
+        • list/retrieve — право `view_reservation`
+        • create         — право `add_reservation`
+        • update/patch   — право `change_reservation`
+        • destroy        — право `delete_reservation`
+      summary: Частичное обновление бронирования
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Аренда инвентарного оборудования.
+        required: true
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedReservation'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+          description: ''
+    delete:
+      operationId: v0_reservation_destroy
+      description: |-
+        CRUD для модели Reservation (аренды оборудования).
+
+        • list/retrieve — право `view_reservation`
+        • create         — право `add_reservation`
+        • update/patch   — право `change_reservation`
+        • destroy        — право `delete_reservation`
+      summary: Удалить бронирование
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Аренда инвентарного оборудования.
+        required: true
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v0/users/:
+    get:
+      operationId: v0_users_list
+      description: |-
+        **Полноценный CRUD для пользователей**.
+
+        Доступ имеют:
+        * суперпользователи;
+        * члены групп **«Администратор системы»** или **«Модератор»**.
+      summary: Список пользователей
+      parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: Номер страницы (≥ 1)
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: Размер страницы (по умолчанию 20, максимум 100)
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserList'
+          description: Пагинированный список пользователей
+        '403':
+          description: Нет прав доступа
+    post:
+      operationId: v0_users_create
+      description: |-
+        **Полноценный CRUD для пользователей**.
+
+        Доступ имеют:
+        * суперпользователи;
+        * члены групп **«Администратор системы»** или **«Модератор»**.
+      summary: Создать пользователя
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: Пользователь создан (не активен, ожидает подтверждения)
+        '400':
+          description: Ошибки валидации
+        '403':
+          description: Нет прав доступа
+  /api/v0/users/{id}/:
+    get:
+      operationId: v0_users_retrieve
+      description: |-
+        **Полноценный CRUD для пользователей**.
+
+        Доступ имеют:
+        * суперпользователи;
+        * члены групп **«Администратор системы»** или **«Модератор»**.
+      summary: Детальная информация о пользователе
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this пользователь.
+        required: true
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+        '404':
+          description: Пользователь не найден
+        '403':
+          description: Нет прав доступа
+    put:
+      operationId: v0_users_update
+      description: |-
+        **Полноценный CRUD для пользователей**.
+
+        Доступ имеют:
+        * суперпользователи;
+        * члены групп **«Администратор системы»** или **«Модератор»**.
+      summary: Полное обновление пользователя
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this пользователь.
+        required: true
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+        '400':
+          description: Ошибки
+        '403':
+          description: Нет прав доступа
+    patch:
+      operationId: v0_users_partial_update
+      description: |-
+        **Полноценный CRUD для пользователей**.
+
+        Доступ имеют:
+        * суперпользователи;
+        * члены групп **«Администратор системы»** или **«Модератор»**.
+      summary: Частичное обновление пользователя
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this пользователь.
+        required: true
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+        '400':
+          description: Ошибки
+        '403':
+          description: Нет прав доступа
+    delete:
+      operationId: v0_users_destroy
+      description: |-
+        **Полноценный CRUD для пользователей**.
+
+        Доступ имеют:
+        * суперпользователи;
+        * члены групп **«Администратор системы»** или **«Модератор»**.
+      summary: Удалить пользователя
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this пользователь.
+        required: true
+      tags:
+      - v0
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: Удалено
+        '403':
+          description: Нет прав доступа
+  /api/v0/users/{id}/set-active/:
+    patch:
+      operationId: v0_users_set_active_partial_update
+      description: Позволяет включить или выключить пользователя. Требуются права
+        `change_user` и принадлежность к разрешённой группе.
+      summary: Изменить флаг is_active
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this пользователь.
+        required: true
+      tags:
+      - v0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSetActive'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: Статус is_active изменён
+        '400':
+          description: Ошибка валидации
+        '403':
+          description: Нет прав доступа
+        '404':
+          description: Пользователь не найден
+components:
+  schemas:
+    GenderEnum:
+      enum:
+      - M
+      - F
+      - U
+      type: string
+      description: |-
+        * `M` - Мужской
+        * `F` - Женский
+        * `U` - Не указан
+    InventoryEquipment:
+      type: object
+      description: |-
+        Сериализатор инвентарного оборудования.
+
+        * На запись принимает **id** связанных объектов (`owner`, `status`, `location`).
+        * На чтение дополнительно отдаёт их «читаемые» имена.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        owner:
+          type: integer
+          description: ID пользователя-владельца
+        status:
+          type: integer
+          nullable: true
+          description: ID статуса оборудования
+        location:
+          type: integer
+          description: ID местоположения оборудования
+        owner_username:
+          type: string
+          readOnly: true
+        status_name:
+          type: string
+          readOnly: true
+        location_name:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          title: Название инвентарного оборудования
+          maxLength: 100
+        inventory_number:
+          type: string
+          title: Штрихкод оборудования
+          maxLength: 32
+        photo:
+          type: string
+          format: uri
+          nullable: true
+          title: Фото оборудования
+        description:
+          type: string
+          nullable: true
+          title: Описание оборудования
+        registration_date:
+          type: string
+          format: date
+          readOnly: true
+          title: Дата создания
+        created_at:
+          type: string
+          format: date
+          readOnly: true
+          nullable: true
+          title: Дата создания
+        updated_at:
+          type: string
+          format: date
+          readOnly: true
+          nullable: true
+          title: Дата обновления
+      required:
+      - created_at
+      - id
+      - inventory_number
+      - location
+      - location_name
+      - name
+      - owner
+      - owner_username
+      - registration_date
+      - status_name
+      - updated_at
+    InventoryEquipmentStatus:
+      type: object
+      description: |-
+        Сериализатор статуса инвентарного оборудования.
+        Передаёт / принимает только поле ``name`` (и ``id`` как read-only).
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название статуса оборудования
+          maxLength: 64
+      required:
+      - id
+      - name
+    Location:
+      type: object
+      description: |-
+        Сериализатор местоположения инвентарного оборудования.
+        Отдаёт / принимает поля: id, name, description.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название местоположения
+          maxLength: 255
+        description:
+          type: string
+          title: Описание местоположения
+      required:
+      - description
+      - id
+      - name
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
+    Maintenance:
+      type: object
+      description: |-
+        Сериализатор для модели Maintenance — обслуживания/проверки оборудования.
+        Поля:
+          - equipment: ссылка на InventoryEquipment (PrimaryKey)
+          - reporter_by: ссылка на User, кто сообщил о проверке
+          - assigned_by: ссылка на User, кто выполнял проверку
+          - description: описание самой проверки (может быть пустым)
+          - status: ссылка на MaintenanceStatus
+          - created_at: автоматически ставится при создании (только для чтения)
+          - updated_at: автоматически обновляется при изменении (только для чтения)
+          - description_updated: описание изменений (может быть пустым)
+          - start_time: дата и время начала обслуживания
+          - end_time: дата и время конца обслуживания
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        equipment:
+          type: integer
+          title: Инвентарное оборудование
+        equipment_display:
+          type: string
+          readOnly: true
+          title: Оборудование (строка)
+        reporter_by:
+          type: integer
+          title: Кто сообщил о проверке оборудования
+        reporter_display:
+          type: string
+          readOnly: true
+          title: Reporter (строка)
+        assigned_by:
+          type: integer
+          title: Кто проверил исправность оборудования
+        assigned_display:
+          type: string
+          readOnly: true
+          title: Assigned (строка)
+        description:
+          type: string
+          nullable: true
+          title: Описание проверки оборудования
+        status:
+          type: integer
+          title: Статус обслуживания
+        status_display:
+          type: string
+          readOnly: true
+          title: Статус (строка)
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Дата и время создания <UNK> <UNK>
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Дата и время обновления
+        description_updated:
+          type: string
+          nullable: true
+          title: Описание обновления
+        start_time:
+          type: string
+          format: date-time
+          title: Дата и время начала обслуживания
+        end_time:
+          type: string
+          format: date-time
+          title: Дата и время конца обслуживания
+      required:
+      - assigned_by
+      - assigned_display
+      - created_at
+      - end_time
+      - equipment
+      - equipment_display
+      - id
+      - reporter_by
+      - reporter_display
+      - start_time
+      - status
+      - status_display
+      - updated_at
+    MaintenanceStatus:
+      type: object
+      description: |-
+        Сериализатор для модели MaintenanceStatus.
+        Позволяет получать и обновлять поля name и description.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название статуса
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+          title: Описание
+      required:
+      - id
+      - name
+    PaginatedInventoryEquipmentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryEquipment'
+    PaginatedInventoryEquipmentStatusList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryEquipmentStatus'
+    PaginatedLocationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Location'
+    PaginatedMaintenanceList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Maintenance'
+    PaginatedMaintenanceStatusList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MaintenanceStatus'
+    PaginatedReservationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reservation'
+    PaginatedUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    PatchedInventoryEquipment:
+      type: object
+      description: |-
+        Сериализатор инвентарного оборудования.
+
+        * На запись принимает **id** связанных объектов (`owner`, `status`, `location`).
+        * На чтение дополнительно отдаёт их «читаемые» имена.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        owner:
+          type: integer
+          description: ID пользователя-владельца
+        status:
+          type: integer
+          nullable: true
+          description: ID статуса оборудования
+        location:
+          type: integer
+          description: ID местоположения оборудования
+        owner_username:
+          type: string
+          readOnly: true
+        status_name:
+          type: string
+          readOnly: true
+        location_name:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          title: Название инвентарного оборудования
+          maxLength: 100
+        inventory_number:
+          type: string
+          title: Штрихкод оборудования
+          maxLength: 32
+        photo:
+          type: string
+          format: uri
+          nullable: true
+          title: Фото оборудования
+        description:
+          type: string
+          nullable: true
+          title: Описание оборудования
+        registration_date:
+          type: string
+          format: date
+          readOnly: true
+          title: Дата создания
+        created_at:
+          type: string
+          format: date
+          readOnly: true
+          nullable: true
+          title: Дата создания
+        updated_at:
+          type: string
+          format: date
+          readOnly: true
+          nullable: true
+          title: Дата обновления
+    PatchedInventoryEquipmentStatus:
+      type: object
+      description: |-
+        Сериализатор статуса инвентарного оборудования.
+        Передаёт / принимает только поле ``name`` (и ``id`` как read-only).
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название статуса оборудования
+          maxLength: 64
+    PatchedLocation:
+      type: object
+      description: |-
+        Сериализатор местоположения инвентарного оборудования.
+        Отдаёт / принимает поля: id, name, description.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название местоположения
+          maxLength: 255
+        description:
+          type: string
+          title: Описание местоположения
+    PatchedMaintenance:
+      type: object
+      description: |-
+        Сериализатор для модели Maintenance — обслуживания/проверки оборудования.
+        Поля:
+          - equipment: ссылка на InventoryEquipment (PrimaryKey)
+          - reporter_by: ссылка на User, кто сообщил о проверке
+          - assigned_by: ссылка на User, кто выполнял проверку
+          - description: описание самой проверки (может быть пустым)
+          - status: ссылка на MaintenanceStatus
+          - created_at: автоматически ставится при создании (только для чтения)
+          - updated_at: автоматически обновляется при изменении (только для чтения)
+          - description_updated: описание изменений (может быть пустым)
+          - start_time: дата и время начала обслуживания
+          - end_time: дата и время конца обслуживания
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        equipment:
+          type: integer
+          title: Инвентарное оборудование
+        equipment_display:
+          type: string
+          readOnly: true
+          title: Оборудование (строка)
+        reporter_by:
+          type: integer
+          title: Кто сообщил о проверке оборудования
+        reporter_display:
+          type: string
+          readOnly: true
+          title: Reporter (строка)
+        assigned_by:
+          type: integer
+          title: Кто проверил исправность оборудования
+        assigned_display:
+          type: string
+          readOnly: true
+          title: Assigned (строка)
+        description:
+          type: string
+          nullable: true
+          title: Описание проверки оборудования
+        status:
+          type: integer
+          title: Статус обслуживания
+        status_display:
+          type: string
+          readOnly: true
+          title: Статус (строка)
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Дата и время создания <UNK> <UNK>
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Дата и время обновления
+        description_updated:
+          type: string
+          nullable: true
+          title: Описание обновления
+        start_time:
+          type: string
+          format: date-time
+          title: Дата и время начала обслуживания
+        end_time:
+          type: string
+          format: date-time
+          title: Дата и время конца обслуживания
+    PatchedMaintenanceStatus:
+      type: object
+      description: |-
+        Сериализатор для модели MaintenanceStatus.
+        Позволяет получать и обновлять поля name и description.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название статуса
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+          title: Описание
+    PatchedReservation:
+      type: object
+      description: |-
+        Сериализатор аренды инвентарного оборудования.
+
+        • На запись принимает `equipment`, `renter`, `assigned_by`, `location`
+          как **ID** связанных объектов.
+        • Отдаёт читаемые поля: имя оборудования, пользователи, локация.
+        • Валидирует даты и проверяет перекрытия для одного и того же оборудования.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        equipment:
+          type: integer
+          description: ID оборудования
+        renter:
+          type: integer
+          description: ID арендатора
+        assigned_by:
+          type: integer
+          description: ID пользователя, оформившего аренду
+        location:
+          type: integer
+          description: ID местоположения оборудования
+        equipment_name:
+          type: string
+          readOnly: true
+        renter_username:
+          type: string
+          readOnly: true
+        assigned_by_username:
+          type: string
+          readOnly: true
+        location_name:
+          type: string
+          readOnly: true
+        start_time:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Время начала
+        end_time:
+          type: string
+          format: date-time
+          title: Время окончания
+        actual_return_time:
+          type: string
+          format: date-time
+          nullable: true
+          title: Фактическое время возврата
+        description:
+          type: string
+          nullable: true
+          title: Описание аренды
+    PatchedSetActive:
+      type: object
+      properties:
+        is_active:
+          type: boolean
+    PatchedUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          title: Имя пользователя
+          maxLength: 128
+        email:
+          type: string
+          format: email
+          nullable: true
+          title: Почта
+          maxLength: 254
+        last_name:
+          type: string
+          title: Фамилия
+          maxLength: 150
+        first_name:
+          type: string
+          title: Имя
+          maxLength: 150
+        patronymic:
+          type: string
+          nullable: true
+          title: Отчество
+          maxLength: 150
+        gender:
+          allOf:
+          - $ref: '#/components/schemas/GenderEnum'
+          title: Пол
+        phone:
+          type: string
+          nullable: true
+          title: Номер телефона
+          maxLength: 20
+        telegram_chat_id:
+          type: string
+          nullable: true
+          title: Чат ID телеграмма для отправки уведомлений
+          maxLength: 255
+        avatar:
+          type: string
+          format: uri
+          nullable: true
+          title: Аватар
+    Reservation:
+      type: object
+      description: |-
+        Сериализатор аренды инвентарного оборудования.
+
+        • На запись принимает `equipment`, `renter`, `assigned_by`, `location`
+          как **ID** связанных объектов.
+        • Отдаёт читаемые поля: имя оборудования, пользователи, локация.
+        • Валидирует даты и проверяет перекрытия для одного и того же оборудования.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        equipment:
+          type: integer
+          description: ID оборудования
+        renter:
+          type: integer
+          description: ID арендатора
+        assigned_by:
+          type: integer
+          description: ID пользователя, оформившего аренду
+        location:
+          type: integer
+          description: ID местоположения оборудования
+        equipment_name:
+          type: string
+          readOnly: true
+        renter_username:
+          type: string
+          readOnly: true
+        assigned_by_username:
+          type: string
+          readOnly: true
+        location_name:
+          type: string
+          readOnly: true
+        start_time:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Время начала
+        end_time:
+          type: string
+          format: date-time
+          title: Время окончания
+        actual_return_time:
+          type: string
+          format: date-time
+          nullable: true
+          title: Фактическое время возврата
+        description:
+          type: string
+          nullable: true
+          title: Описание аренды
+      required:
+      - assigned_by
+      - assigned_by_username
+      - end_time
+      - equipment
+      - equipment_name
+      - id
+      - location
+      - location_name
+      - renter
+      - renter_username
+      - start_time
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          title: Имя пользователя
+          maxLength: 128
+        email:
+          type: string
+          format: email
+          nullable: true
+          title: Почта
+          maxLength: 254
+        last_name:
+          type: string
+          title: Фамилия
+          maxLength: 150
+        first_name:
+          type: string
+          title: Имя
+          maxLength: 150
+        patronymic:
+          type: string
+          nullable: true
+          title: Отчество
+          maxLength: 150
+        gender:
+          allOf:
+          - $ref: '#/components/schemas/GenderEnum'
+          title: Пол
+        phone:
+          type: string
+          nullable: true
+          title: Номер телефона
+          maxLength: 20
+        telegram_chat_id:
+          type: string
+          nullable: true
+          title: Чат ID телеграмма для отправки уведомлений
+          maxLength: 255
+        avatar:
+          type: string
+          format: uri
+          nullable: true
+          title: Аватар
+      required:
+      - first_name
+      - id
+      - last_name
+      - username
+    UserRegistration:
+      type: object
+      properties:
+        username:
+          type: string
+          title: Имя пользователя
+          maxLength: 128
+        password:
+          type: string
+          writeOnly: true
+        password2:
+          type: string
+          writeOnly: true
+          title: Подтверждение пароля
+        last_name:
+          type: string
+          title: Фамилия
+          maxLength: 150
+        first_name:
+          type: string
+          title: Имя
+          maxLength: 150
+        patronymic:
+          type: string
+          nullable: true
+          title: Отчество
+          maxLength: 150
+        gender:
+          allOf:
+          - $ref: '#/components/schemas/GenderEnum'
+          title: Пол
+        email:
+          type: string
+          format: email
+          nullable: true
+          title: Почта
+          maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          title: Номер телефона
+          maxLength: 20
+        avatar:
+          type: string
+          format: uri
+          nullable: true
+          title: Аватар
+      required:
+      - first_name
+      - last_name
+      - password
+      - password2
+      - username
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
