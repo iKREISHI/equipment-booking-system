@@ -89,6 +89,10 @@ CORS_ALLOW_HEADERS = [
     "x-csrftoken",
     "x-requested-with",
 ]
+# Настройки CSRF
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",  # Ваш фронтенд
+]
 
 ROOT_URLCONF = 'config.urls'
 
