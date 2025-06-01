@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'apps.reservations.apps.ReservationsConfig',
     'apps.maintenance.apps.MaintenanceConfig',
     'utils',
+    'web',
 
     # dependencies
     'rest_framework',
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar',
     'corsheaders',
+    'django_bootstrap5',
 ]
 
 MIDDLEWARE = [
@@ -99,7 +101,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
