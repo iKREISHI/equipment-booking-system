@@ -12,26 +12,23 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="">Главная</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">О нас</a>
-            </li>
+{#            <li class="nav-item">#}
+{#              <a class="nav-link active" aria-current="page" href="">Главная</a>#}
+{#            </li>#}
+{#            <li class="nav-item">#}
+{#              <a class="nav-link" href="#">О нас</a>#}
+{#            </li>#}
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                  data-bs-toggle="dropdown" aria-expanded="false">
-                Сервисы
+                Справочники
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Сервис 1</a></li>
-                <li><a class="dropdown-item" href="#">Сервис 2</a></li>
+                <li><a class="dropdown-item" href="{% url 'location_list' %}">Расположение оборудования</a></li>
+                <li><a class="dropdown-item" href="#">Инвентарное оборудование</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="#">Другие ссылки</a></li>
               </ul>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Отключено</a>
             </li>
 
           </ul>
@@ -63,7 +60,7 @@
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="{% url "login" %}">Войти</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="">Регистрация</a></li>
+                <li><a class="dropdown-item" href="{% url 'registration' %}">Регистрация</a></li>
           </ul>
         {% endif %}
         </li>
