@@ -1,13 +1,15 @@
 from django.urls import path
 from django.contrib.auth import views
+from web.users.views.registration import RegistrationView
 
 
 users_urls = [
     path("login/", views.LoginView.as_view(
-        template_name="pages/login.html",
+        template_name="pages/auth/login.html",
         success_url="/web",
     ), name="login"),
     path("logout/", views.LogoutView.as_view(), name="logout"),
+    path('registration', RegistrationView.as_view(), name='registration'),
     path(
         "password_change/",
         views.PasswordChangeView.as_view(

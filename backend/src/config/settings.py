@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'drf_spectacular_sidecar',
     'corsheaders',
     'django_bootstrap5',
+    'captcha',
 ]
 
 MIDDLEWARE = [
