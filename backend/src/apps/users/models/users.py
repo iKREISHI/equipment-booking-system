@@ -178,3 +178,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         Returns the short name for the user.
         """
         return self.username
+
+    def __str__(self):
+        parts = [self.last_name, self.first_name[0] if self.first_name else "",
+                 self.patronymic[0] if self.patronymic else ""]
+        return " ".join(filter(None, parts))
