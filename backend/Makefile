@@ -15,6 +15,7 @@ entrypoint:
 	uv run src/manage.py create_groups
 	uv run src/manage.py entrypoint
 	uv run src/manage.py create_locations
+	uv run src/manage.py create_inventory_status
 
 startapp: sync migrate entrypoint collect-static
 
