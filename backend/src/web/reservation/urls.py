@@ -1,5 +1,6 @@
 from django.urls import path
-from web.reservation.views.approve import ReservationPendingListView, ApproveReservationView, RejectReservationView
+from web.reservation.views.approve import ReservationPendingListView, ApproveReservationView, RejectReservationView, \
+    MyReservationsView
 from web.reservation.views.reservation import ReservationListView, ReservationCreateView, ReservationUpdateView, \
     ReservationDeleteView
 
@@ -11,4 +12,5 @@ urlpatterns = [
     path("pending/", ReservationPendingListView.as_view(), name="reservation_pending"),
     path("pending/approve/<int:pk>/", ApproveReservationView.as_view(), name="reservation_approve"),
     path("pending/reject/<int:pk>/", RejectReservationView.as_view(), name="reservation_reject"),
+    path("my/", MyReservationsView.as_view(), name="reservation_user"),
 ]

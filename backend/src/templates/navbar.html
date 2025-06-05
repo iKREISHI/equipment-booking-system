@@ -41,7 +41,12 @@
                   <li>
                       <a class="dropdown-item" href="{% url 'reservation_pending' %}">Подтверждение заявки на бронирование</a>
                   </li>
-                  {% endif %}
+                {% endif %}
+                {% if not user.is_superuser %}
+                  <li>
+                      <a class="dropdown-item" href="{% url 'reservation_user' %}">Мои заявки</a>
+                  </li>
+                {% endif %}
 {#                <li><hr class="dropdown-divider"></li>#}
 {#                <li><a class="dropdown-item" href="{% url 'reservation_list' %}">Бронирование оборудования</a></li>#}
               </ul>

@@ -52,8 +52,9 @@ class Reservation(models.Model):
         blank=True,
     )
     STATUS_CHOICES = (
-        (0, 'Отклонено'),
-        (1, 'Одобрено'),
+        (0, 'На рассмотрении'),
+        (1, 'Отклонено'),
+        (2, 'Одобрено'),
 
     )
     status = models.IntegerField(

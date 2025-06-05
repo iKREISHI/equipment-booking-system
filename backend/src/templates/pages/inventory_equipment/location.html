@@ -5,12 +5,12 @@
 
 <div class="container my-4">
   <h1 class="mb-4">Список местоположений</h1>
-
+{% if perms.equipments.change_location %}
   <!-- Кнопка открытия модального окна для создания -->
   <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#createLocationModal">
     Добавить местоположение
   </button>
-
+{% endif %}
   <!-- Таблица со списком локаций -->
   <table class="table table-striped table-bordered align-middle">
     <thead class="table-light">
@@ -28,6 +28,7 @@
         <td>{{ location.name }}</td>
         <td>{{ location.description|truncatechars:60 }}</td>
         <td class="text-center">
+        {% if perms.equipments.change_location %}
           <!-- Кнопка для редактирования -->
           <button type="button"
                   class="btn btn-sm btn-primary me-1"
@@ -42,6 +43,7 @@
                   data-bs-target="#deleteLocationModal{{ location.id }}">
             Удалить
           </button>
+        {% endif %}
         </td>
       </tr>
       {% endfor %}

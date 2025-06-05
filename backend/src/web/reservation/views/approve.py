@@ -36,7 +36,7 @@ class ApproveReservationView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def post(self, request, pk):
         reservation = get_object_or_404(Reservation, pk=pk, assigned_by__isnull=True, status=0)
         reservation.assigned_by = request.user
-        reservation.status = 1  # Одобрен
+        reservation.status = 2  # Одобрен
         reservation.status_response = ""  # Очищаем, чтобы не было старых текстов
         reservation.save()
         return redirect(reverse_lazy("reservation_pending"))
@@ -54,7 +54,22 @@ class RejectReservationView(LoginRequiredMixin, PermissionRequiredMixin, View):
         form = RejectReasonForm(request.POST)
         if form.is_valid():
             reservation.assigned_by = request.user
-            reservation.status = 0  # Отклонено
+            reservation.status = 1  # Отклонено
             reservation.status_response = form.cleaned_data["status_response"]
             reservation.save()
         return redirect(reverse_lazy("reservation_pending"))
+
+
+class MyReservationsView(LoginRequiredMixin, ListView):
+    """
+    Показывает текущему пользователю список его заявок на аренду,
+    с отображением статуса и ответа администратора (status_response).
+    """
+    model = Reservation
+    template_name = "pages/reservation/reservation_user.html"
+    context_object_name = "reservations"
+    paginate_by = 10
+
+    def get_queryset(self):
+        # Оставляем только те заявки, где пользователь — арендатор (renter)
+        return Reservation.objects.filter(renter=self.request.user).order_by('-start_time')
