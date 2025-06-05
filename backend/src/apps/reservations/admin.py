@@ -7,6 +7,8 @@ class ReservationAdmin(admin.ModelAdmin):
     list_display = (
         'equipment',
         'renter',
+        'status',
+        'status_response',
         'assigned_by',
         'start_time',
         'end_time',
@@ -21,9 +23,10 @@ class ReservationAdmin(admin.ModelAdmin):
         'assigned_by',
         'location',
         'start_time',
+        'status',
     )
 
-    # Поиск по полям связанных таблиц
+    # Поиск по полям связанных таблиц и по тексту причины
     search_fields = (
         'renter__username',
         'renter__first_name',
@@ -32,6 +35,7 @@ class ReservationAdmin(admin.ModelAdmin):
         'assigned_by__first_name',
         'assigned_by__last_name',
         'equipment__name',
+        'status_response',
     )
 
     # Иерархия по дате начала аренды
@@ -56,6 +60,8 @@ class ReservationAdmin(admin.ModelAdmin):
                 ('start_time', 'end_time'),
                 ('actual_return_time',),
                 'description',
+                'status',
+                'status_response',
             ),
         }),
     )

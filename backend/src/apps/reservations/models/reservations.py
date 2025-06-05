@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from apps.equipments.models.inventory_equipment import InventoryEquipment
-from apps.locations.models import Location
 
 User = get_user_model()
 
@@ -49,6 +48,24 @@ class Reservation(models.Model):
     )
     description = models.TextField(
         verbose_name='Описание аренды',
+        null=True,
+        blank=True,
+    )
+    STATUS_CHOICES = (
+        (0, 'Отклонено'),
+        (1, 'Одобрено'),
+
+    )
+    status = models.IntegerField(
+        choices=STATUS_CHOICES,
+        default=0,
+        verbose_name='Статус',
+        null=True,
+        blank=True,
+    )
+
+    status_response = models.TextField(
+        verbose_name='Причина',
         null=True,
         blank=True,
     )
