@@ -1,7 +1,6 @@
 from django import forms
 from apps.reservations.models import Reservation
 from apps.equipments.models.inventory_equipment import InventoryEquipment
-from apps.locations.models import Location
 
 
 class ReservationForm(forms.ModelForm):
