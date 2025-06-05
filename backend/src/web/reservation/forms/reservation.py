@@ -28,10 +28,12 @@ class ReservationForm(forms.ModelForm):
         }),
         required=False,
     )
-    location = forms.ModelChoiceField(
-        queryset=Location.objects.all(),
+    location = forms.CharField(
         label="Расположение*",
-        widget=forms.Select(attrs={"class": "form-select"}),
+        widget=forms.Textarea(attrs={
+            "class": "form-control",
+            "rows": 3,
+        }),
         required=True,
     )
     description = forms.CharField(

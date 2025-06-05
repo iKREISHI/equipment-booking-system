@@ -26,6 +26,8 @@ class Reservation(models.Model):
         on_delete=models.PROTECT,
         related_name='assigned_arendas',
         verbose_name='Назначил',
+        null=True,
+        blank=True,
     )
     start_time = models.DateTimeField(
         auto_now_add=True,
@@ -39,10 +41,11 @@ class Reservation(models.Model):
         null=True,
         blank=True,
     )
-    location = models.ForeignKey(
-        Location,
-        on_delete=models.PROTECT,
-        verbose_name='Расположение оборудование',
+    location = models.CharField(
+        max_length=255,
+        verbose_name='Расположение',
+        null=True,
+        blank=True,
     )
     description = models.TextField(
         verbose_name='Описание аренды',
