@@ -1,0 +1,44 @@
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
+
+from apps.reservations.models import Reservation
+from web.reservation.forms.reservation import ReservationForm
+
+
+class ReservationPendingListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    """
+    Отображает таблицу «ожидающих одобрения» броней (assigned_by IS NULL).
+    Для каждой записи есть кнопка «Approve», которая устанавливает assigned_by=current user.
+    Требует права change_reservation (или отдельного 'can_approve_reservation').
+    """
+    model = Reservation
+    template_name = "pages/reservation/reservation_pending.html"
+    context_object_name = "reservations"
+    paginate_by = 20  # можно настроить по вкусу
+
+    def get_permission_required(self):
+        app_label = self.model._meta.app_label      # "reservations"
+        model_name = self.model._meta.model_name    # "reservation"
+        # можно создать своё право 'approve_reservation', но используем change_
+        return (f"{app_label}.change_{model_name}",)
+
+    def get_queryset(self):
+        # Показываем только заявки, у которых ещё нет assigned_by (то есть новые)
+        return super().get_queryset().filter(assigned_by__isnull=True).order_by("start_time")
+
+
+class ApproveReservationView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    """
+    Обрабатывает нажатие «Approve» для одной заявки: присваивает assigned_by=current user и сохраняет.
+    Затем — редирект на список pending.
+    """
+    def get_permission_required(self):
+        return ("reservations.change_reservation",)
+
+    def post(self, request, pk):
+        reservation = get_object_or_404(Reservation, pk=pk, assigned_by__isnull=True)
+        reservation.assigned_by = request.user
+        reservation.save()
+        return redirect(reverse_lazy("reservation_pending"))

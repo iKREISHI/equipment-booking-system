@@ -37,6 +37,11 @@
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="{% url 'reservation_list' %}">Бронирование оборудования</a></li>
+                {% if user.is_authenticated and user.is_superuser %}
+                  <li>
+                      <a class="dropdown-item" href="{% url 'reservation_pending' %}">Подтверждение заявки на бронирование</a>
+                  </li>
+                  {% endif %}
 {#                <li><hr class="dropdown-divider"></li>#}
 {#                <li><a class="dropdown-item" href="{% url 'reservation_list' %}">Бронирование оборудования</a></li>#}
               </ul>
