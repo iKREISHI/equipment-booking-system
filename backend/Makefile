@@ -16,6 +16,7 @@ entrypoint:
 	uv run src/manage.py entrypoint
 	uv run src/manage.py create_locations
 	uv run src/manage.py create_inventory_status
+	uv run src/manage.py create_maintenance_status
 
 startapp: sync migrate entrypoint collect-static
 
