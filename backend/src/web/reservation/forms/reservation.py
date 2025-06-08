@@ -11,6 +11,14 @@ class ReservationForm(forms.ModelForm):
         widget=forms.Select(attrs={"class": "form-select"}),
         required=True,
     )
+    start_time = forms.DateTimeField(
+        label="Время начала*",
+        widget=forms.DateTimeInput(attrs={
+            "class": "form-control",
+            "type": "datetime-local"
+        }),
+        required=True,
+    )
     end_time = forms.DateTimeField(
         label="Время окончания*",
         widget=forms.DateTimeInput(attrs={
@@ -49,6 +57,7 @@ class ReservationForm(forms.ModelForm):
         model = Reservation
         fields = [
             "equipment",
+            "start_time",
             "end_time",
             "actual_return_time",
             "location",
@@ -56,6 +65,7 @@ class ReservationForm(forms.ModelForm):
         ]
         labels = {
             "equipment": "Оборудование*",
+            "start_time": "Время начала*",
             "end_time": "Время окончания*",
             "actual_return_time": "Фактическое время возврата",
             "location": "Расположение*",

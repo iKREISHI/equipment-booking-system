@@ -29,7 +29,6 @@ class Reservation(models.Model):
         blank=True,
     )
     start_time = models.DateTimeField(
-        auto_now_add=True,
         verbose_name='Время начала',
     )
     end_time = models.DateTimeField(

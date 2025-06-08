@@ -1,4 +1,5 @@
-from django.shortcuts import redirect
+from django.contrib import messages
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -64,6 +65,21 @@ class ReservationCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateV
             reservation.assigned_by = self.request.user
         reservation.save()
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # 1. Собираем контекст точно так же, как ListView
+        list_view = ReservationListView()
+        list_view.request = self.request
+        context = list_view.get_context_data()
+
+        # 2. Подставляем в контекст именно ту форму, которая пришла с ошибками
+        context['create_form'] = form
+
+        # 3. Флаг, чтобы в шаблоне открыть модалку автоматически
+        context['show_create_modal'] = True
+
+        # 4. Рендерим страницу списка, где есть ваша модалка с form.errors
+        return render(self.request, list_view.template_name, context)
 
 
 class ReservationUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):

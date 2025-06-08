@@ -142,6 +142,13 @@
             {% endif %}
           </div>
           <div class="mb-3">
+            {{ create_form.start_time.label_tag }}
+            {{ create_form.start_time }}
+            {% if create_form.start_time.errors %}
+              <div class="text-danger small">{{ create_form.start_time.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="mb-3">
             {{ create_form.end_time.label_tag }}
             {{ create_form.end_time }}
             {% if create_form.end_time.errors %}
@@ -214,6 +221,13 @@
               {{ reservation.update_form.equipment }}
               {% if reservation.update_form.equipment.errors %}
                 <div class="text-danger small">{{ reservation.update_form.equipment.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              {{ reservation.update_form.start_time.label_tag }}
+              {{ reservation.update_form.start_time }}
+              {% if reservation.update_form.start_time.errors %}
+                <div class="text-danger small">{{ reservation.update_form.start_time.errors.0 }}</div>
               {% endif %}
             </div>
             <div class="mb-3">
