@@ -10,8 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
+from datetime import timedelta
 from pathlib import Path
-from .config import DATABASES_URL
+from .config import (
+    DATABASES_URL,
+    MINIO_ROOT_USER, MINIO_ROOT_PASSWORD,
+    MINIO_INSTANCE_ADDRESS,
+    SERVER_BACKEND_IP_ADDRESS
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -56,6 +62,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_bootstrap5',
     'captcha',
+    'minio_storage'
 ]
 
 MIDDLEWARE = [
@@ -186,9 +193,34 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
-
+# Storage
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STORAGES = {
+    "default": {
+        "BACKEND": "minio_storage.storage.MinioMediaStorage",
+    },
+    # "staticfiles": {
+    #     "BACKEND": ""minio_storage.storage.MinioMediaStorage"",
+    # },
+    # or "django.contrib.staticfiles.storage.StaticFilesStorage",
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
+MINIO_STORAGE_ENDPOINT = MINIO_INSTANCE_ADDRESS
+MINIO_STORAGE_ACCESS_KEY = MINIO_ROOT_USER
+MINIO_STORAGE_SECRET_KEY = MINIO_ROOT_PASSWORD
+MINIO_STORAGE_USE_HTTPS = False
+MINIO_URL_EXPIRY_HOURS = timedelta(days=360)
+MINIO_STORAGE_MEDIA_BUCKET_NAME = 'media'
+MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
+MINIO_STORAGE_MEDIA_URL = f'http://{SERVER_BACKEND_IP_ADDRESS}/media/'
+MEDIA_URL = f'http://{SERVER_BACKEND_IP_ADDRESS}/media/'
+# MINIO_STORAGE_MEDIA_URL = f'{MINIO_INSTANCE_ADDRESS}/media/'
+# MEDIA_URL = MINIO_STORAGE_MEDIA_URL
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

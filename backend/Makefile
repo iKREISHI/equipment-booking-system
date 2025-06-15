@@ -18,7 +18,7 @@ entrypoint:
 	uv run src/manage.py create_inventory_status
 	uv run src/manage.py create_maintenance_status
 
-startapp: sync run-db migrate entrypoint collect-static
+startapp: sync run-dev migrate entrypoint collect-static
 
 runserver:
 	uv run src/manage.py runserver
@@ -26,11 +26,12 @@ runserver:
 tests:
 	uv run src/manage.py test apps api.v0 --parallel
 
-run-db:
+run-dev:
 	docker compose -f ../docker-compose.yml up postgres -d
+	docker compose -f ../docker-compose.yml up minio -d
 
-stop-db:
-	docker compose -f ../docker-compose.yml down postgres
+stop:
+	docker compose -f ../docker-compose.yml down
 
 logs:
 	docker compose -f ../docker-compose.yml logs
