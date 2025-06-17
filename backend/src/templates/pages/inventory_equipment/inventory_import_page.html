@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Импорт инвентаря{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Импорт оборудования (.xlsx)</h1>
+
+<!-- Кнопка открытия модального окна загрузки -->
+<button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#uploadModal">
+  Новый импорт
+</button>
+
+<!-- Таблица с импортами -->
+<table class="table table-bordered table-hover align-middle">
+  <thead class="table-light">
+    <tr>
+      <th>ID</th>
+      <th>Файл</th>
+      <th>Дата</th>
+      <th>Статус</th>
+      <th>Добавлено</th>
+      <th>Дубликаты</th>
+      <th>Пропущено</th>
+      <th>Детали</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for imp in imports %}
+      <tr class="{% if imp.status == 'FAILED' %}table-danger{% elif imp.status == 'SUCCESS' %}table-success{% endif %}">
+        <td>{{ imp.pk }}</td>
+        <td>{{ imp.file.name|cut:"uploads/inventory/" }}</td>
+        <td>{{ imp.uploaded_at|date:"d.m.Y H:i" }}</td>
+        <td>{{ imp.get_status_display }}</td>
+        <td>{{ imp.rows_created }}</td>
+        <td>{{ imp.rows_duplicated }}</td>
+        <td>{{ imp.rows_skipped }}</td>
+        <td>
+          <a href="#" data-bs-toggle="modal" data-bs-target="#detailModal{{ imp.pk }}">
+            Просмотр
+          </a>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="8" class="text-center">Импортов пока нет.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Модальное окно «Загрузка файла» -->
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="uploadModalLabel">Новый импорт</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            {{ form.file.label_tag }} {{ form.file }}
+            {% for error in form.file.errors %}
+              <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+          <button type="submit" class="btn btn-primary">Импортировать</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Модальные окна «Детали импорта» (одно на каждый импорт) -->
+{% for imp in imports %}
+<div class="modal fade" id="detailModal{{ imp.pk }}" tabindex="-1" aria-labelledby="detailModalLabel{{ imp.pk }}" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detailModalLabel{{ imp.pk }}">Импорт #{{ imp.pk }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group mb-3">
+          <li class="list-group-item"><strong>Файл:</strong> {{ imp.file.name|cut:"uploads/inventory/" }}</li>
+          <li class="list-group-item"><strong>Дата загрузки:</strong> {{ imp.uploaded_at|date:"d.m.Y H:i" }}</li>
+          <li class="list-group-item"><strong>Статус:</strong> {{ imp.get_status_display }}</li>
+          <li class="list-group-item"><strong>Добавлено:</strong> {{ imp.rows_created }}</li>
+          <li class="list-group-item"><strong>Дубликаты:</strong> {{ imp.rows_duplicated }}</li>
+          <li class="list-group-item"><strong>Пропущено:</strong> {{ imp.rows_skipped }}</li>
+          {% if imp.error %}
+            <li class="list-group-item list-group-item-danger">
+              <strong>Ошибка:</strong> {{ imp.error }}
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}
+
+{% block extra_js %}
+  <script>
+    // если только что был успешный импорт — откроем его модальное окно
+    {% if request.session.open_detail_id %}
+      document.addEventListener('DOMContentLoaded', function () {
+        var modal = new bootstrap.Modal(document.getElementById('detailModal{{ request.session.open_detail_id }}'));
+        modal.show();
+      });
+      {% csrf_token %}
+      fetch("{% url 'inventory-import-page' %}", {method:"POST"}); // очистим сессию (произвольный POST с токеном)
+    {% endif %}
+  </script>
+{% endblock %}
