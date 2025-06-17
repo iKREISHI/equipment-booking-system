@@ -67,6 +67,10 @@ class InventoryEquipment(models.Model):
         blank=True,
         null=True,
     )
+    count = models.PositiveIntegerField(
+        verbose_name='Количество',
+        default=1,
+    )
 
     def __str__(self):
         return f"{self.name} - {self.inventory_number}"

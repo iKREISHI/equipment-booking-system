@@ -161,6 +161,17 @@
                 required>
             </div>
             <div class="col-12 col-md-6 mb-3">
+              <label for="id_count_create" class="form-label">Количество*</label>
+              <input
+                type="number"
+                name="count"
+                class="form-control"
+                id="id_count_create"
+                placeholder="Введите количество"
+                min="1"
+                required>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
               <label for="id_status_create" class="form-label">Статус</label>
               <select name="status" id="id_status_create" class="form-select">
                 <option value="" selected>— Выберите статус —</option>
@@ -252,6 +263,17 @@
                   class="form-control"
                   id="id_inventory_number_{{ equipment.id }}"
                   value="{{ equipment.inventory_number }}"
+                  required>
+              </div>
+              <div class="col-12 col-md-6 mb-3">
+                <label for="id_count_{{ equipment.id }}" class="form-label">Количество*</label>
+                <input
+                  type="number"
+                  name="count"
+                  class="form-control"
+                  id="id_count_{{ equipment.id }}"
+                  value="{{ equipment.count }}"
+                  min="1"
                   required>
               </div>
               <div class="col-12 col-md-6 mb-3">

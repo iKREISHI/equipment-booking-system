@@ -32,6 +32,15 @@ class InventoryEquipmentForm(forms.ModelForm):
         required=True,
         max_length=32
     )
+    count = forms.CharField(
+        label="Количество*",
+        widget=forms.NumberInput(attrs={
+            "class": "form-control",
+            "placeholder": "Введите количество"
+        }),
+        required=True,
+        max_length=32
+    )
     photo = forms.ImageField(
         label="Фото",
         widget=forms.ClearableFileInput(attrs={
@@ -75,4 +84,5 @@ class InventoryEquipmentForm(forms.ModelForm):
             "description",
             "status",
             "location",
+            "count",
         ]
