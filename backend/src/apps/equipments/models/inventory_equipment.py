@@ -14,13 +14,15 @@ class InventoryEquipment(models.Model):
     )
 
     name = models.CharField(
-        max_length=100,
+        max_length=255,
         verbose_name='Название оборудования',
     )
 
     inventory_number = models.CharField(
-        max_length=32,
+        max_length=64,
         verbose_name='Штрихкод оборудования',
+        null=True,
+        blank=True,
     )
 
     registration_date = models.DateField(
