@@ -29,6 +29,7 @@ tests:
 run-dev:
 	docker compose -f ../docker-compose-local-dev.yml up postgres -d
 	docker compose -f ../docker-compose-local-dev.yml up minio -d
+	docker compose -f ../docker-compose-local-dev.yml up nginx
 
 stop:
 	docker compose -f ../docker-compose-local-dev.yml down
