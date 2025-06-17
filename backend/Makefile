@@ -27,11 +27,11 @@ tests:
 	uv run src/manage.py test apps api.v0 --parallel
 
 run-dev:
-	docker compose -f ../docker-compose.yml up postgres -d
-	docker compose -f ../docker-compose.yml up minio -d
+	docker compose -f ../docker-compose-local-dev.yml up postgres -d
+	docker compose -f ../docker-compose-local-dev.yml up minio -d
 
 stop:
-	docker compose -f ../docker-compose.yml down
+	docker compose -f ../docker-compose-local-dev.yml down
 
 logs:
-	docker compose -f ../docker-compose.yml logs
+	docker compose -f .../docker-compose-local-dev.yml logs

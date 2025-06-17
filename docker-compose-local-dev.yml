@@ -46,10 +46,8 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/nginx/local-dev.conf:/etc/nginx/conf.d/default.conf:ro
       - ./backend/src/staticfiles:/static:ro
-#    depends_on:
-#      - backend
 
 volumes:
   pg_data:
