@@ -6,7 +6,7 @@ from apps.users.models import User
 
 
 class InventoryEquipment(models.Model):
-    """Модель инвентарного оборудования"""
+    """Модель оборудования"""
     owner = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
@@ -15,7 +15,7 @@ class InventoryEquipment(models.Model):
 
     name = models.CharField(
         max_length=100,
-        verbose_name='Название инвентарного оборудования',
+        verbose_name='Название оборудования',
     )
 
     inventory_number = models.CharField(
@@ -72,5 +72,5 @@ class InventoryEquipment(models.Model):
         return f"{self.name} - {self.inventory_number}"
 
     class Meta:
-        verbose_name = 'Инвентарное оборудование'
-        verbose_name_plural = 'Инвентарные оборудования'
+        verbose_name = 'Оборудование'
+        verbose_name_plural = 'Оборудование'

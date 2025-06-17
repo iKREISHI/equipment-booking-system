@@ -7,7 +7,7 @@ User = get_user_model()
 
 class Reservation(models.Model):
     """
-        Модель аренды инвентарного оборудования
+        Модель аренды оборудования
     """
     equipment = models.ForeignKey(
         InventoryEquipment,
@@ -74,5 +74,5 @@ class Reservation(models.Model):
         return f"{self.equipment} — {self.renter} ({self.start_time.date()})"
 
     class Meta:
-        verbose_name = 'Аренда инвентарного оборудования'
-        verbose_name_plural = 'Аренды инвентарного оборудования'
+        verbose_name = 'Аренда оборудования'
+        verbose_name_plural = 'Аренды оборудования'

@@ -107,12 +107,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     GENDER_CHOICES = [
         ('M', _("Мужской")),
         ('F', _("Женский")),
-        ('U', _("Не указан")),
+        #('U', _("Не указан")),
     ]
     gender = models.CharField(
         max_length=1,
         choices=GENDER_CHOICES,
-        default='U',
+        #default='U',
         verbose_name=_("Пол"),
         validators=[validate_gender],
     )
@@ -135,7 +135,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name=_("Номер телефона"),
         validators=[validate_phone],
     )
-    telegram_chat_id = models.CharField(
+    telegram_chat_id = models.CharField( # we need this?
         null=True,
         blank=True,
         verbose_name='Чат ID телеграмма для отправки уведомлений',

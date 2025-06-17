@@ -11,6 +11,6 @@ class InventoryEquipmentStatus(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'Статус инвентарного оборудования'
-        verbose_name_plural = 'Статусы инвентарного оборудования'
+        verbose_name = 'Статус оборудования'
+        verbose_name_plural = 'Статусы оборудования'
 

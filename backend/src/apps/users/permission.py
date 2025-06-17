@@ -4,9 +4,9 @@ from rest_framework import permissions
 class IsSuperuserOrSystemAdmin(permissions.BasePermission):
     """
     Доступ разрешён, если пользователь:
-    • суперпользователь (`is_superuser=True`);
-    • состоит в группе «Администратор системы»;
-    • состоит в группе «Модератор».
+     суперпользователь (`is_superuser=True`);
+     состоит в группе «Администратор системы»;
+     состоит в группе «Модератор».
     """
 
     SYSTEM_ADMIN_GROUP = "Администратор системы"
