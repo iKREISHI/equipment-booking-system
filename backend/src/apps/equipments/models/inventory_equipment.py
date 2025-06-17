@@ -21,6 +21,8 @@ class InventoryEquipment(models.Model):
     inventory_number = models.CharField(
         max_length=64,
         verbose_name='Штрихкод оборудования',
+        null=True,
+        blank=True,
     )
 
     registration_date = models.DateField(

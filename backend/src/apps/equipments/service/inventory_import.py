@@ -15,7 +15,7 @@ def run_inventory_import(imp: InventoryImport) -> None:
     imp.save(update_fields=["status"])
 
     try:
-        # 🔻 главное изменение — open() вместо .path
+        #  главное изменение — open() вместо .path
         with imp.file.open("rb") as uploaded:
             df = pd.read_excel(uploaded)
 
@@ -37,8 +37,10 @@ def run_inventory_import(imp: InventoryImport) -> None:
         for _, row in df.iterrows():
             raw_num = row["Инвентарный номер"]
             if pd.isna(raw_num):
-                skipped += 1
-                continue
+                # skipped += 1
+                # continue
+                raw_num = ""
+
             inv_number = f"{int(raw_num):d}" if isinstance(raw_num, float) else str(raw_num).strip()
             if InventoryEquipment.objects.filter(inventory_number=inv_number).exists():
                 duplicated += 1
