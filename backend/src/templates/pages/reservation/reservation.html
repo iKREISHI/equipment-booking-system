@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="container my-4">
-  <h1 class="mb-4">Аренды инвентарного оборудования</h1>
+  <h1 class="mb-4">Аренды оборудования</h1>
 
   {# ─── Кнопка «Добавить аренду» ─── #}
   {% if perms.reservations.add_reservation %}
@@ -38,7 +38,7 @@
           <td>{{ reservation.start_time|date:"Y-m-d H:i" }}</td>
           <td>{{ reservation.end_time|date:"Y-m-d H:i" }}</td>
           <td>{{ reservation.location }}</td>
-          <td class="text-center">
+          <td class="text-center" style="width: 120px; margin: 0 auto;">
             {# ─── Редактировать ─── #}
             {% if perms.reservations.change_reservation %}
               <button

@@ -46,17 +46,17 @@
           <td>{{ m.status }}</td>
           <td>{{ m.start_time|date:"Y-m-d H:i" }}</td>
           <td>{{ m.end_time|date:"Y-m-d H:i" }}</td>
-          <td>
+          <td style="width: 120px; margin: 0 auto;">
             {% if perms.maintenance.change_maintenance %}
-              <button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#updateModal{{ m.id }}">
-                Редактировать
+              <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#updateModal{{ m.id }}">
+                Ред.
               </button>
             {% endif %}
             {% if perms.maintenance.delete_maintenance %}
               <form action="{% url 'maintenance_delete' m.id %}" method="post" class="d-inline">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Удалить обслуживание?');">
-                  Удалить
+                  Удл.
                 </button>
               </form>
             {% endif %}

@@ -27,21 +27,21 @@
         <th scope="row">{{ forloop.counter0|add:page_obj.start_index }}</th>
         <td>{{ location.name }}</td>
         <td>{{ location.description|truncatechars:60 }}</td>
-        <td class="text-center">
+        <td class="text-center" style="width: 120px; margin: 0 auto;">
         {% if perms.equipments.change_location %}
           <!-- Кнопка для редактирования -->
           <button type="button"
                   class="btn btn-sm btn-primary me-1"
                   data-bs-toggle="modal"
                   data-bs-target="#updateLocationModal{{ location.id }}">
-            Редактировать
+            Ред.
           </button>
           <!-- Кнопка для удаления -->
           <button type="button"
                   class="btn btn-sm btn-danger"
                   data-bs-toggle="modal"
                   data-bs-target="#deleteLocationModal{{ location.id }}">
-            Удалить
+            Удл.
           </button>
         {% endif %}
         </td>
