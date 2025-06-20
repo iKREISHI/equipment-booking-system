@@ -52,6 +52,6 @@ GROUP_DEFINITIONS = {
     "Арендатор": (
         ["view_inventoryequipment", "view_inventoryequipmentstatus"] +
         ["view_location"] +
-        RESERVATION_RIGHTS
+        ["add_reservation", "view_reservation"]
     ),
 }

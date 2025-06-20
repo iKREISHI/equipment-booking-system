@@ -51,12 +51,13 @@
 {#                <li><a class="dropdown-item" href="{% url 'reservation_list' %}">Бронирование оборудования</a></li>#}
               </ul>
             </li>
-            <li class="nav-item dropdown">
+              {% if user.is_superuser or perms.maintenance.add_maintenance or  perms.maintenance.change_maintenance %}
+              <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                  data-bs-toggle="dropdown" aria-expanded="false">
                 Обслуживание
               </a>
-              {% if user.is_superuser or perms.maintenance.add_maintenance or  perms.maintenance.change_maintenance %}
+
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item" href="{% url 'maintenance_list' %}">Обслуживание</a></li>
               </ul>
