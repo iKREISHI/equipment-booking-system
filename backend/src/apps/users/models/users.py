@@ -167,17 +167,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _('users')
 
     def get_full_name(self):
-        """
-        Returns the first_name plus the last_name, with a space in between.
-        """
-        full_name = '%s' % self.username
-        return full_name.strip()
+        parts = [self.last_name, self.first_name, self.patronymic]
+        return " ".join(filter(None, parts))
 
     def get_short_name(self):
-        """
-        Returns the short name for the user.
-        """
-        return self.username
+        parts = [self.last_name, self.first_name[0] if self.first_name else "", self.patronymic[0] if self.patronymic else ""]
+        return " ".join(filter(None, parts))
 
     def __str__(self):
         parts = [self.last_name, self.first_name[0] if self.first_name else "",
