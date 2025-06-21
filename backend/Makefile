@@ -5,7 +5,7 @@ sync:
 	uv sync
 
 collect-static:
-	uv run src/manage.py collectstatic
+	uv run src/manage.py collectstatic --no-input
 
 migrate:
 	uv run src/manage.py makemigrations users locations equipments reservations maintenance
