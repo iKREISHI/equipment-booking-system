@@ -1,0 +1,386 @@
+{# templates/pages/inventory_equipment/inventory_equipment.html #}
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container my-4">
+  <h1 class="mb-4">Список оборудования</h1>
+
+  {# ───────── Кнопки «Создать / Импортировать» ───────── #}
+  {% if perms.equipments.add_inventoryequipment %}
+    <button class="btn btn-success mb-3"
+            data-bs-toggle="modal"
+            data-bs-target="#createEquipmentModal">
+      Добавить оборудование
+    </button>
+
+    <button class="btn btn-success mb-3"
+            onclick="location.href='{% url 'inventory-import-page' %}'">
+      Импортировать оборудование
+    </button>
+  {% endif %}
+
+  {# ───────── Таблица ───────── #}
+  <table class="table table-striped table-bordered align-middle">
+    <thead class="table-light">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Название</th>
+        <th scope="col">Штрихкод</th>
+        <th scope="col">Владелец</th>
+        <th scope="col">Статус</th>
+        <th scope="col">Локация</th>
+        <th scope="col">Дата создания</th>
+        {% if perms.equipments.change_inventoryequipment or perms.equipments.delete_inventoryequipment %}
+          <th scope="col" class="text-center">Действия</th>
+        {% endif %}
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for equipment in page_obj.object_list %}
+        <tr>
+          <th scope="row">{{ forloop.counter|add:page_obj.start_index|add:-1 }}</th>
+
+          {# ── Клик по названию → модалка подробностей ── #}
+          <td>
+            <a role="button"
+               data-bs-toggle="modal"
+               data-bs-target="#detailEquipmentModal{{ equipment.id }}"
+               class="text-decoration-none">
+              {{ equipment.name }}
+            </a>
+          </td>
+
+          <td>{{ equipment.inventory_number }}</td>
+          <td>{{ equipment.owner.get_full_name }}</td>
+          <td>{% if equipment.status %}{{ equipment.status.name }}{% else %}—{% endif %}</td>
+          <td>{{ equipment.location.name }}</td>
+          <td>{{ equipment.registration_date }}</td>
+
+          {% if perms.equipments.change_inventoryequipment or perms.equipments.delete_inventoryequipment %}
+            <td class="text-center" style="width: 120px;">
+              {% if perms.equipments.change_inventoryequipment %}
+                <button class="btn btn-sm btn-primary me-1"
+                        data-bs-toggle="modal"
+                        data-bs-target="#updateEquipmentModal{{ equipment.id }}">
+                  Ред.
+                </button>
+              {% endif %}
+              {% if perms.equipments.delete_inventoryequipment %}
+                <button class="btn btn-sm btn-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteEquipmentModal{{ equipment.id }}">
+                  Удл.
+                </button>
+              {% endif %}
+            </td>
+          {% endif %}
+        </tr>
+        {# ─────────── МОДАЛКА «Создать оборудование» ─────────── #}
+<div class="modal fade" id="createEquipmentModal" tabindex="-1"
+     aria-labelledby="createEquipmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <form method="post" action="{% url 'inventory_create' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="createEquipmentModalLabel">Добавить оборудование</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          {# ----- поля формы (оставлены без изменений) ----- #}
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="id_owner_create" class="form-label">Владелец*</label>
+              <select class="form-select" name="owner" id="id_owner_create" required>
+                <option value="" disabled selected>— Выберите владельца —</option>
+                {% for user in users %}
+                  <option value="{{ user.id }}">{{ user.get_full_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="id_name_create" class="form-label">Название*</label>
+              <input class="form-control" type="text" name="name" id="id_name_create" required>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="id_inventory_number_create" class="form-label">Штрихкод*</label>
+              <input class="form-control" type="text" name="inventory_number"
+                     id="id_inventory_number_create" required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="id_count_create" class="form-label">Количество*</label>
+              <input class="form-control" type="number" name="count" id="id_count_create" min="1" required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="id_status_create" class="form-label">Статус</label>
+              <select class="form-select" name="status" id="id_status_create">
+                <option value="" selected>— Выберите статус —</option>
+                {% for st in statuses %}
+                  <option value="{{ st.id }}">{{ st.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="id_location_create" class="form-label">Локация*</label>
+              <select class="form-select" name="location" id="id_location_create" required>
+                <option value="" disabled selected>— Выберите локацию —</option>
+                {% for loc in locations %}
+                  <option value="{{ loc.id }}">{{ loc.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="id_photo_create" class="form-label">Фото</label>
+              <input class="form-control" type="file" name="photo" id="id_photo_create">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="id_description_create" class="form-label">Описание</label>
+            <textarea class="form-control" name="description" id="id_description_create" rows="3"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+          <button type="submit" class="btn btn-success">Создать</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+        {# ───────────────── МОДАЛКА ПОДРОБНОСТЕЙ ───────────────── #}
+        <div class="modal fade" id="detailEquipmentModal{{ equipment.id }}" tabindex="-1"
+             aria-labelledby="detailEquipmentModalLabel{{ equipment.id }}" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="detailEquipmentModalLabel{{ equipment.id }}">
+                  Подробности: {{ equipment.name }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+
+              <div class="modal-body">
+                <div class="row g-4">
+                  <div class="col-md-5 text-center">
+                    {% if equipment.photo %}
+                      <img src="{{ equipment.photo.url }}" class="img-fluid rounded shadow-sm"
+                           alt="Фото {{ equipment.name }}">
+                    {% else %}
+{#                      <img src="{% static 'img/no-photo.png' %}" class="img-fluid rounded shadow-sm"#}
+{#                           alt="Фото отсутствует">#}
+                        <span class="text-muted">— Фото отсутствует —</span>
+                    {% endif %}
+                  </div>
+
+                  <div class="col-md-7">
+                    <dl class="row mb-0">
+                      <dt class="col-5">Штрихкод:</dt><dd class="col-7">{{ equipment.inventory_number }}</dd>
+                      <dt class="col-5">Владелец:</dt><dd class="col-7">{{ equipment.owner.get_short_name }}</dd>
+                      <dt class="col-5">Статус:</dt><dd class="col-7">{% if equipment.status %}{{ equipment.status.name }}{% else %}—{% endif %}</dd>
+                      <dt class="col-5">Локация:</dt><dd class="col-7">{{ equipment.location.name }}</dd>
+                      <dt class="col-5">Количество:</dt><dd class="col-7">{{ equipment.count }}</dd>
+                      <dt class="col-5">Дата регистрации:</dt><dd class="col-7">{{ equipment.registration_date }}</dd>
+                      <dt class="col-5">Описание:</dt>
+                      <dd class="col-7">
+                        {% if equipment.description %}
+                          {{ equipment.description }}
+                        {% else %}
+                          <span class="text-muted">— нет описания —</span>
+                        {% endif %}
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {# ───────────────── МОДАЛКА РЕДАКТИРОВАНИЯ ───────────────── #}
+        {% if perms.equipments.change_inventoryequipment %}
+        <div class="modal fade" id="updateEquipmentModal{{ equipment.id }}" tabindex="-1"
+             aria-labelledby="updateEquipmentModalLabel{{ equipment.id }}" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <form method="post" action="{% url 'inventory_update' equipment.id %}"
+                    enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                  <h5 class="modal-title" id="updateEquipmentModalLabel{{ equipment.id }}">
+                    Редактировать: {{ equipment.name }}
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="id_owner_{{ equipment.id }}" class="form-label">Владелец*</label>
+                      <select name="owner" id="id_owner_{{ equipment.id }}" class="form-select" required>
+                        {% for user in users %}
+                          <option value="{{ user.id }}" {% if user.id == equipment.owner_id %}selected{% endif %}>
+                            {{ user.get_full_name }}
+                          </option>
+                        {% endfor %}
+                      </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label for="id_name_{{ equipment.id }}" class="form-label">Название*</label>
+                      <input type="text" name="name" id="id_name_{{ equipment.id }}"
+                             value="{{ equipment.name }}" class="form-control" required>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="id_inventory_number_{{ equipment.id }}" class="form-label">Штрихкод*</label>
+                      <input type="text" name="inventory_number"
+                             id="id_inventory_number_{{ equipment.id }}"
+                             value="{{ equipment.inventory_number }}" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label for="id_count_{{ equipment.id }}" class="form-label">Количество*</label>
+                      <input type="number" name="count" id="id_count_{{ equipment.id }}"
+                             value="{{ equipment.count }}" class="form-control" min="1" required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label for="id_status_{{ equipment.id }}" class="form-label">Статус</label>
+                      <select name="status" id="id_status_{{ equipment.id }}" class="form-select">
+                        <option value="" {% if not equipment.status_id %}selected{% endif %}>— Выберите статус —</option>
+                        {% for st in statuses %}
+                          <option value="{{ st.id }}" {% if st.id == equipment.status_id %}selected{% endif %}>
+                            {{ st.name }}
+                          </option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="id_location_{{ equipment.id }}" class="form-label">Локация*</label>
+                      <select name="location" id="id_location_{{ equipment.id }}" class="form-select" required>
+                        {% for loc in locations %}
+                          <option value="{{ loc.id }}" {% if loc.id == equipment.location_id %}selected{% endif %}>
+                            {{ loc.name }}
+                          </option>
+                        {% endfor %}
+                      </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label for="id_photo_{{ equipment.id }}" class="form-label">Фото</label>
+                      <input type="file" name="photo" id="id_photo_{{ equipment.id }}" class="form-control">
+                      {% if equipment.photo %}
+                        <small class="text-muted">
+                          Текущее: <a href="{{ equipment.photo.url }}" target="_blank">просмотреть</a>
+                        </small>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="id_description_{{ equipment.id }}" class="form-label">Описание</label>
+                    <textarea name="description" id="id_description_{{ equipment.id }}" class="form-control" rows="3">
+                      {{ equipment.description }}
+                    </textarea>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                  <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {# ───────────────── МОДАЛКА УДАЛЕНИЯ ───────────────── #}
+        {% if perms.equipments.delete_inventoryequipment %}
+        <div class="modal fade" id="deleteEquipmentModal{{ equipment.id }}" tabindex="-1"
+             aria-labelledby="deleteEquipmentModalLabel{{ equipment.id }}" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <form method="post" action="{% url 'inventory_delete' equipment.id %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                  <h5 class="modal-title text-danger" id="deleteEquipmentModalLabel{{ equipment.id }}">
+                    Удалить: {{ equipment.name }}?
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                  <p>Вы уверены, что хотите удалить это оборудование?</p>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                  <button type="submit" class="btn btn-danger">Удалить</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {# ───────── Пагинация (повтор) ───────── #}
+  {% if page_obj.has_other_pages %}
+    <nav aria-label="Pagination">
+      <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+          <li class="page-item"><a class="page-link" href="?page=1">«Первая</a></li>
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">‹</a></li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">«Первая</span></li>
+          <li class="page-item disabled"><span class="page-link">‹</span></li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+          {% if num == page_obj.number %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+          {% elif num >= page_obj.number|add:-2 and num <= page_obj.number|add:2 %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">›</a></li>
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Последняя»</a></li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">›</span></li>
+          <li class="page-item disabled"><span class="page-link">Последняя»</span></li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+</div>
+
+{% endblock %}

@@ -107,12 +107,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     GENDER_CHOICES = [
         ('M', _("Мужской")),
         ('F', _("Женский")),
-        ('U', _("Не указан")),
+        #('U', _("Не указан")),
     ]
     gender = models.CharField(
         max_length=1,
         choices=GENDER_CHOICES,
-        default='U',
+        #default='U',
         verbose_name=_("Пол"),
         validators=[validate_gender],
     )
@@ -135,7 +135,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name=_("Номер телефона"),
         validators=[validate_phone],
     )
-    telegram_chat_id = models.CharField(
+    telegram_chat_id = models.CharField( # we need this?
         null=True,
         blank=True,
         verbose_name='Чат ID телеграмма для отправки уведомлений',
@@ -167,14 +167,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _('users')
 
     def get_full_name(self):
-        """
-        Returns the first_name plus the last_name, with a space in between.
-        """
-        full_name = '%s' % self.username
-        return full_name.strip()
+        parts = [self.last_name, self.first_name, self.patronymic]
+        return " ".join(filter(None, parts))
 
     def get_short_name(self):
-        """
-        Returns the short name for the user.
-        """
-        return self.username
+        parts = [self.last_name, self.first_name[0] if self.first_name else "", self.patronymic[0] if self.patronymic else ""]
+        return " ".join(filter(None, parts))
+
+    def __str__(self):
+        parts = [self.last_name, self.first_name[0] if self.first_name else "",
+                 self.patronymic[0] if self.patronymic else ""]
+        return " ".join(filter(None, parts))

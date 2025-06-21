@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <br>
+        <div class="text-center align-content-center">
+            <h2 class="text-center mb-4">Вход</h2>
+            <!-- <img src="{ static 'image/logo/icon-techno.png' }" width="30%" height="30%" alt="logo"> -->
+        </div>
+
+        {# Вывод общих ошибок формы, если они есть #}
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                    <p class="mb-0">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form action="{% url 'login' %}" method="post" novalidate>
+            {% csrf_token %}
+            {# Вывод полей формы с помощью django-bootstrap5 #}
+            {% bootstrap_form form %}
+
+            {# Кнопка входа #}
+            <div class="d-grid gap-2 mb-2">
+                <button type="submit" class="btn btn-primary">Войти</button>
+            </div>
+
+            {# Кнопка регистрации: предполагается, что URL с именем 'register' настроен в urls.py #}
+            <div class="d-grid gap-2 mb-2">
+                <a href="{% url 'registration' %}" class="btn btn-secondary">Регистрация</a>
+            </div>
+        </form>
+
+        {# Ссылка «Забыли пароль?» оставляем скрытой, как было, если она не нужна, можно убрать этот блок #}
+        <a href="{% url 'password_reset' %}" style="display: none">Забыли пароль?</a>
+    </div>
+</div>
+{% endblock %}

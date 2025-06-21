@@ -10,7 +10,7 @@ class Maintenance(models.Model):
     equipment = models.ForeignKey(
         InventoryEquipment,
         on_delete=models.PROTECT,
-        verbose_name='Инвентарное оборудование',
+        verbose_name='Оборудование',
     )
     reporter_by = models.ForeignKey(
        'users.User',

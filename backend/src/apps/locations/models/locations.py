@@ -14,5 +14,5 @@ class Location(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'Местоположение инвентарного оборудования'
-        verbose_name_plural = 'Местоположения инвентарного оборудования'
+        verbose_name = 'Местоположение оборудования'
+        verbose_name_plural = 'Местоположения оборудования'

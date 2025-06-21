@@ -1,14 +1,13 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from apps.equipments.models.inventory_equipment import InventoryEquipment
-from apps.locations.models import Location
 
 User = get_user_model()
 
 
 class Reservation(models.Model):
     """
-        Модель аренды инвентарного оборудования
+        Модель аренды оборудования
     """
     equipment = models.ForeignKey(
         InventoryEquipment,
@@ -26,9 +25,10 @@ class Reservation(models.Model):
         on_delete=models.PROTECT,
         related_name='assigned_arendas',
         verbose_name='Назначил',
+        null=True,
+        blank=True,
     )
     start_time = models.DateTimeField(
-        auto_now_add=True,
         verbose_name='Время начала',
     )
     end_time = models.DateTimeField(
@@ -39,13 +39,33 @@ class Reservation(models.Model):
         null=True,
         blank=True,
     )
-    location = models.ForeignKey(
-        Location,
-        on_delete=models.PROTECT,
-        verbose_name='Расположение оборудование',
+    location = models.CharField(
+        max_length=255,
+        verbose_name='Расположение',
+        null=True,
+        blank=True,
     )
     description = models.TextField(
         verbose_name='Описание аренды',
+        null=True,
+        blank=True,
+    )
+    STATUS_CHOICES = (
+        (0, 'На рассмотрении'),
+        (1, 'Отклонено'),
+        (2, 'Одобрено'),
+
+    )
+    status = models.IntegerField(
+        choices=STATUS_CHOICES,
+        default=0,
+        verbose_name='Статус',
+        null=True,
+        blank=True,
+    )
+
+    status_response = models.TextField(
+        verbose_name='Причина',
         null=True,
         blank=True,
     )
@@ -54,5 +74,5 @@ class Reservation(models.Model):
         return f"{self.equipment} — {self.renter} ({self.start_time.date()})"
 
     class Meta:
-        verbose_name = 'Аренда инвентарного оборудования'
-        verbose_name_plural = 'Аренды инвентарного оборудования'
+        verbose_name = 'Аренда оборудования'
+        verbose_name_plural = 'Аренды оборудования'

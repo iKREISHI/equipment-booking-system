@@ -10,7 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
+from datetime import timedelta
 from pathlib import Path
+from .config import (
+    DATABASES_URL,
+    MINIO_ROOT_USER, MINIO_ROOT_PASSWORD,
+    MINIO_INSTANCE_ADDRESS,
+    SERVER_BACKEND_IP_ADDRESS
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,6 +52,7 @@ INSTALLED_APPS = [
     'apps.reservations.apps.ReservationsConfig',
     'apps.maintenance.apps.MaintenanceConfig',
     'utils',
+    'web',
 
     # dependencies
     'rest_framework',
@@ -52,6 +60,9 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar',
     'corsheaders',
+    'django_bootstrap5',
+    'captcha',
+    'minio_storage'
 ]
 
 MIDDLEWARE = [
@@ -99,7 +110,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'], # тут не было basedir
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -145,10 +156,7 @@ SPECTACULAR_SETTINGS = {
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': DATABASES_URL
 }
 
 
@@ -185,9 +193,34 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
-
+# Storage
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STORAGES = {
+    "default": {
+        "BACKEND": "minio_storage.storage.MinioMediaStorage",
+    },
+    # "staticfiles": {
+    #     "BACKEND": ""minio_storage.storage.MinioMediaStorage"",
+    # },
+    # or "django.contrib.staticfiles.storage.StaticFilesStorage",
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
+MINIO_STORAGE_ENDPOINT = MINIO_INSTANCE_ADDRESS
+MINIO_STORAGE_ACCESS_KEY = MINIO_ROOT_USER
+MINIO_STORAGE_SECRET_KEY = MINIO_ROOT_PASSWORD
+MINIO_STORAGE_USE_HTTPS = False
+MINIO_URL_EXPIRY_HOURS = timedelta(days=360)
+MINIO_STORAGE_MEDIA_BUCKET_NAME = 'media'
+MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
+MINIO_STORAGE_MEDIA_URL = f'http://{SERVER_BACKEND_IP_ADDRESS}/media/'
+MEDIA_URL = f'http://{SERVER_BACKEND_IP_ADDRESS}/media/'
+# MINIO_STORAGE_MEDIA_URL = f'{MINIO_INSTANCE_ADDRESS}/media/'
+# MEDIA_URL = MINIO_STORAGE_MEDIA_URL
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -196,3 +229,45 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # UserModel
 AUTH_USER_MODEL = "users.User"
+
+LOGOUT_REDIRECT_URL = "homepage"
+LOGIN_REDIRECT_URL = "homepage"
+LOGIN_URL = 'login'
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
+        },
+    },
+    "formatters": {
+        "simple": {
+            "format": "%(asctime)s %(levelname)s %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
+    "handlers": {
+        "file": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": "django.log",
+            "formatter": "simple",
+        },
+        "console": {
+            "level": "INFO",
+            "filters": ["require_debug_true"],
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file", "console"],  # Используем оба хэндлера
+            "level": "INFO",
+            "propagate": False,
+        },
+
+    },
+}

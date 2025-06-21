@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container my-4">
+  <h1 class="mb-4">Аренды оборудования</h1>
+
+  {# ─── Кнопка «Добавить аренду» ─── #}
+  {% if perms.reservations.add_reservation %}
+    <button
+      type="button"
+      class="btn btn-success mb-3"
+      data-bs-toggle="modal"
+      data-bs-target="#createReservationModal">
+      Добавить аренду
+    </button>
+  {% endif %}
+
+  {# ─── Таблица бронирований ─── #}
+  <table class="table table-striped table-bordered align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>Оборудование</th>
+        <th>Арендатор</th>
+        <th>Дата начала</th>
+        <th>Время окончания</th>
+        <th>Локация</th>
+        <th class="text-center">Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for reservation in page_obj.object_list %}
+        <tr>
+          <td>{{ forloop.counter0|add:page_obj.start_index }}</td>
+          <td>{{ reservation.equipment.name }}</td>
+          <td>{{ reservation.renter.get_full_name }}</td>
+          <td>{{ reservation.start_time|date:"Y-m-d H:i" }}</td>
+          <td>{{ reservation.end_time|date:"Y-m-d H:i" }}</td>
+          <td>{{ reservation.location }}</td>
+          <td class="text-center" style="width: 120px; margin: 0 auto;">
+            {# ─── Редактировать ─── #}
+            {% if perms.reservations.change_reservation %}
+              <button
+                type="button"
+                class="btn btn-sm btn-primary me-1"
+                data-bs-toggle="modal"
+                data-bs-target="#updateReservationModal{{ reservation.id }}">
+                Ред.
+              </button>
+            {% endif %}
+            {# ─── Удалить ─── #}
+            {% if perms.reservations.delete_reservation %}
+              <button
+                type="button"
+                class="btn btn-sm btn-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#deleteReservationModal{{ reservation.id }}">
+                Удл.
+              </button>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="7" class="text-center">Нет записей</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {# ─── Пагинация ─── #}
+  {% if page_obj.has_other_pages %}
+    <nav aria-label="Pagination">
+      <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page=1">«Первая</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">‹</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">«Первая</span></li>
+          <li class="page-item disabled"><span class="page-link">‹</span></li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+          {% if num == page_obj.number %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+          {% elif num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">›</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Последняя»</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">›</span></li>
+          <li class="page-item disabled"><span class="page-link">Последняя»</span></li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+</div>
+
+{# ───── Модалка «Добавить аренду» ───── #}
+<div
+  class="modal fade"
+  id="createReservationModal"
+  tabindex="-1"
+  aria-labelledby="createReservationModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <form
+        method="post"
+        action="{% url 'reservation_create' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="createReservationModalLabel">Добавить аренду</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Закрыть"></button>
+        </div>
+        <div class="modal-body">
+          {# Берём пустую форму из контекста: {{ create_form }} #}
+          <div class="mb-3">
+            {{ create_form.equipment.label_tag }}
+            {{ create_form.equipment }}
+            {% if create_form.equipment.errors %}
+              <div class="text-danger small">{{ create_form.equipment.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            {{ create_form.start_time.label_tag }}
+            {{ create_form.start_time }}
+            {% if create_form.start_time.errors %}
+              <div class="text-danger small">{{ create_form.start_time.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            {{ create_form.end_time.label_tag }}
+            {{ create_form.end_time }}
+            {% if create_form.end_time.errors %}
+              <div class="text-danger small">{{ create_form.end_time.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            {{ create_form.actual_return_time.label_tag }}
+            {{ create_form.actual_return_time }}
+            {% if create_form.actual_return_time.errors %}
+              <div class="text-danger small">{{ create_form.actual_return_time.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            {{ create_form.location.label_tag }}
+            {{ create_form.location }}
+            {% if create_form.location.errors %}
+              <div class="text-danger small">{{ create_form.location.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            {{ create_form.description.label_tag }}
+            {{ create_form.description }}
+            {% if create_form.description.errors %}
+              <div class="text-danger small">{{ create_form.description.errors.0 }}</div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal">Отмена</button>
+          <button type="submit" class="btn btn-success">Создать</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{# ─── Модалки «Редактировать» и «Удалить» для каждой записи ─── #}
+{% for reservation in page_obj.object_list %}
+  {# ─── Модалка «Редактировать» ─── #}
+  <div
+    class="modal fade"
+    id="updateReservationModal{{ reservation.id }}"
+    tabindex="-1"
+    aria-labelledby="updateReservationModalLabel{{ reservation.id }}"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <form
+          method="post"
+          action="{% url 'reservation_update' reservation.id %}">
+          {% csrf_token %}
+          <div class="modal-header">
+            <h5 class="modal-title" id="updateReservationModalLabel{{ reservation.id }}">
+              Редактировать аренду
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Закрыть"></button>
+          </div>
+          <div class="modal-body">
+            {# Берём форму-экземпляр reservation.update_form #}
+            <div class="mb-3">
+              {{ reservation.update_form.equipment.label_tag }}
+              {{ reservation.update_form.equipment }}
+              {% if reservation.update_form.equipment.errors %}
+                <div class="text-danger small">{{ reservation.update_form.equipment.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              {{ reservation.update_form.start_time.label_tag }}
+              {{ reservation.update_form.start_time }}
+              {% if reservation.update_form.start_time.errors %}
+                <div class="text-danger small">{{ reservation.update_form.start_time.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              {{ reservation.update_form.end_time.label_tag }}
+              {{ reservation.update_form.end_time }}
+              {% if reservation.update_form.end_time.errors %}
+                <div class="text-danger small">{{ reservation.update_form.end_time.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              {{ reservation.update_form.actual_return_time.label_tag }}
+              {{ reservation.update_form.actual_return_time }}
+              {% if reservation.update_form.actual_return_time.errors %}
+                <div class="text-danger small">{{ reservation.update_form.actual_return_time.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              {{ reservation.update_form.location.label_tag }}
+              {{ reservation.update_form.location }}
+              {% if reservation.update_form.location.errors %}
+                <div class="text-danger small">{{ reservation.update_form.location.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              {{ reservation.update_form.description.label_tag }}
+              {{ reservation.update_form.description }}
+              {% if reservation.update_form.description.errors %}
+                <div class="text-danger small">{{ reservation.update_form.description.errors.0 }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal">Отмена</button>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {# ─── Модалка «Удалить» ─── #}
+  <div
+    class="modal fade"
+    id="deleteReservationModal{{ reservation.id }}"
+    tabindex="-1"
+    aria-labelledby="deleteReservationModalLabel{{ reservation.id }}"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form method="post" action="{% url 'reservation_delete' reservation.id %}">
+          {% csrf_token %}
+          <div class="modal-header">
+            <h5 class="modal-title text-danger" id="deleteReservationModalLabel{{ reservation.id }}">
+              Удалить аренду?
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Закрыть"></button>
+          </div>
+          <div class="modal-body">
+            <p>Вы действительно хотите удалить запись об аренде:</p>
+            <p><strong>{{ reservation.equipment.name }} — {{ reservation.renter.get_full_name }}</strong></p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal">Отмена</button>
+            <button type="submit" class="btn btn-danger">Удалить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+{% endblock %}

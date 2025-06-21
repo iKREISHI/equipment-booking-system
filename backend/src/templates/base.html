@@ -1,0 +1,40 @@
+{% load django_bootstrap5 %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Система бронирования оборудования технопарка УПК{% endblock %}</title>
+    {% load static django_bootstrap5 %}
+
+    {% bootstrap_css %}
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    {% include "navbar.html" %}
+    {% block navbar %}
+    {% endblock %}
+
+    {# Основной контент #}
+    <main class="container my-4 flex-grow-1">
+      {% block content %}
+      {% endblock %}
+    </main>
+
+    <footer class="bg-light text-center py-3 mt-auto">
+      <div class="container">
+        <span class="text-muted">© 2025 Система бронирования оборудования технопарка УПК. Все права защищены.</span>
+      </div>
+    </footer>
+
+    {% bootstrap_javascript %}
+
+    {# ─── Ваш кастомный JS (необязательно) ─── #}
+{#    <script src="{% static 'main/js/custom.js' %}"></script>#}
+
+    {# ─── Блок для дополнительных скриптов на конкретных страницах ─── #}
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

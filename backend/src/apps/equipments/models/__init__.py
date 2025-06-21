@@ -1,2 +1,3 @@
 from .inventory_equipment import InventoryEquipment
 from .inventory_equipment_status import InventoryEquipmentStatus
+from .inventory_import import InventoryImport

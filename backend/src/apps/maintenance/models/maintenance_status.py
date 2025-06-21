@@ -17,7 +17,7 @@ class MaintenanceStatus(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'Статус оборудования'
-        verbose_name_plural = 'Статусы оборудования'
+        verbose_name = 'Статус обслуживания оборудования'
+        verbose_name_plural = 'Статусы обслуживания оборудования'
 
 
