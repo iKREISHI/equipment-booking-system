@@ -1,4 +1,4 @@
-from django.contrib import messages
+from django.db import transaction
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -30,8 +30,9 @@ class MaintenanceListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["create_form"] = MaintenanceForm()
-        for m in context["page_obj"].object_list:
+        context['create_form'] = MaintenanceForm()
+        for m in context['page_obj'].object_list:
+            # здесь уже будет корректный initial для дат
             m.update_form = MaintenanceForm(instance=m)
         return context
 
@@ -124,3 +125,18 @@ class MaintenanceDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteV
 
     def get(self, request, *args, **kwargs):
         return redirect(self.success_url)
+
+    def post(self, request, *args, **kwargs):
+        with transaction.atomic():
+            self.object = self.get_object()              # обслуживание
+            equipment = self.object.equipment            # связанное оборудование
+
+            available_status, _ = InventoryEquipmentStatus.objects.get_or_create(
+                name="Доступно"
+            )
+
+            equipment.status_id = available_status.id    # меняем статус
+            equipment.save(update_fields=["status"])     # пишем в БД
+
+            # теперь удаляем обслуживание штатным способом
+            return super().post(request, *args, **kwargs)

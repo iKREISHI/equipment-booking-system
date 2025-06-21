@@ -74,13 +74,15 @@ class MaintenanceForm(forms.ModelForm):
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            # Если редактирование, добавить текущее оборудование
+            # Если форма создаётся «для редактирования»
             if self.instance and self.instance.pk:
-                current_eq = self.instance.equipment
-                # Исключаем оборудование со статусом "В аренде" и добавляем текущее
-                qs = InventoryEquipment.objects.exclude(status__name="В аренде") \
-                     | InventoryEquipment.objects.filter(pk=current_eq.pk)
-                self.fields["equipment"].queryset = qs.distinct()
-            else:
-                # При создании: только оборудование не в аренде
-                self.fields["equipment"].queryset = InventoryEquipment.objects.exclude(status__name="В аренде")
+                # Переводим datetime в строку вида '2025-06-21T14:30'
+                self.fields['start_time'].initial = (
+                    self.instance.start_time.strftime('%Y-%m-%dT%H:%M')
+                )
+                self.fields['end_time'].initial = (
+                    self.instance.end_time.strftime('%Y-%m-%dT%H:%M')
+                )
+            # Устанавливаем те же форматы для разбора данных из POST
+            self.fields['start_time'].input_formats = ['%Y-%m-%dT%H:%M']
+            self.fields['end_time'].input_formats = ['%Y-%m-%dT%H:%M']
