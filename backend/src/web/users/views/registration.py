@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.views import View
 from web.users.forms.registration import UserRegisterForm
+from django.contrib.auth.models import Group
 
 
 class RegistrationView(View):
@@ -24,6 +25,13 @@ class RegistrationView(View):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=password)
+
+            try:
+                group = Group.objects.get(name='Арендатор')
+                user.groups.add(group)
+            except Group.DoesNotExist:
+                pass
+
             login(request, user)
             return redirect('homepage')
 
