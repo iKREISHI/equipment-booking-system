@@ -13,7 +13,7 @@ from web.maintenance.forms.maintenance import MaintenanceForm
 ISO_FMT = "%Y-%m-%dT%H:%M"
 
 
-class MaintenanceListView(LoginRequiredMixin, ListView):
+class MaintenanceListView(LoginRequiredMixin, ListView, PermissionRequiredMixin):
     """
     Отображает список проверок/обслуживаний оборудования (с пагинацией).
     В контексте кладёт:
@@ -25,6 +25,17 @@ class MaintenanceListView(LoginRequiredMixin, ListView):
     template_name = "pages/maintenance/maintenance.html"
     context_object_name = "maintenances"
     paginate_by = 10
+
+    def get_permission_required(self):
+        # Требуем право change_reservation (можно сделать кастомное can_approve_reservation)
+        app_label = self.model._meta.app_label
+        model_name = self.model._meta.model_name
+        return (
+            f"{app_label}.view_{model_name}",
+            f"{app_label}.change_{model_name}",
+            f"{app_label}.add_{model_name}",
+            f"{app_label}.delete_{model_name}",
+        )
 
     @staticmethod
     def _to_iso(dt):
@@ -45,8 +56,6 @@ class MaintenanceListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         qs = super().get_queryset().filter(assigned_by__isnull=False)
-        if self.request.user.is_superuser:
-            return qs
         return qs.filter(reporter_by_id=self.request.user.id)
 
     def get_context_data(self, **kwargs):
