@@ -10,7 +10,7 @@ logs:
 build:
 	docker compose -f ./docker-compose.yml up -d --build
 	# migrate
-	docker compose -f ./docker-compose.yml exec backend uv run manage.py makemigrations
+	docker compose -f ./docker-compose.yml exec backend uv run manage.py makemigrations users locations equipments reservations maintenance
 	docker compose -f ./docker-compose.yml exec backend uv run manage.py migrate
 	# Collect static
 	docker compose -f ./docker-compose.yml exec backend uv run manage.py collectstatic --no-input
