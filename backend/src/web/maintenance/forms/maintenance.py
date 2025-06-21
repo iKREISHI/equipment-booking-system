@@ -1,4 +1,5 @@
 from django import forms
+from django.utils import timezone
 from apps.maintenance.models import Maintenance
 from apps.equipments.models.inventory_equipment import InventoryEquipment
 from apps.maintenance.models.maintenance_status import MaintenanceStatus
@@ -71,18 +72,21 @@ class MaintenanceForm(forms.ModelForm):
             "description": "Описание проверки оборудования",
             "description_updated": "Описание обновления",
         }
+        widgets = {
+            "start_time": forms.DateTimeInput(attrs={"type": "datetime-local"}),
+            "end_time": forms.DateTimeInput(attrs={"type": "datetime-local"}),
+        }
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            # Если форма создаётся «для редактирования»
-            if self.instance and self.instance.pk:
-                # Переводим datetime в строку вида '2025-06-21T14:30'
-                self.fields['start_time'].initial = (
-                    self.instance.start_time.strftime('%Y-%m-%dT%H:%M')
-                )
-                self.fields['end_time'].initial = (
-                    self.instance.end_time.strftime('%Y-%m-%dT%H:%M')
-                )
-            # Устанавливаем те же форматы для разбора данных из POST
-            self.fields['start_time'].input_formats = ['%Y-%m-%dT%H:%M']
-            self.fields['end_time'].input_formats = ['%Y-%m-%dT%H:%M']
+
+            # ⚑   ставим initial из instance в нужном ISO-виде
+            for fname in ("start_time", "end_time"):
+                dt = getattr(self.instance, fname, None)
+                if dt:
+                    if timezone.is_aware(dt):  # на случай USE_TZ=True
+                        dt = timezone.localtime(dt)
+                    self.fields[fname].initial = dt.strftime(DATETIME_FMT)
+
+                # чтобы Django понял то, что пришлёт браузер
+                self.fields[fname].input_formats = [DATETIME_FMT]

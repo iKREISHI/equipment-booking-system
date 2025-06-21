@@ -64,28 +64,19 @@
         </tr>
 
         <!-- Модалка редактирования -->
-        <div class="modal fade" id="updateModal{{ m.id }}" tabindex="-1"
-             aria-labelledby="updateModalLabel{{ m.id }}" aria-hidden="true">
+        <div class="modal fade" id="updateModal{{ m.id }}" tabindex="-1" aria-labelledby="updateModalLabel{{ m.id }}" aria-hidden="true">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="updateModalLabel{{ m.id }}">
-                  Редактировать обслуживание #{{ m.id }}
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                <h5 class="modal-title" id="updateModalLabel{{ m.id }}">Редактировать обслуживание #{{ m.id }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-
               <div class="modal-body">
                 <form method="post" action="{% url 'maintenance_update' m.id %}">
                   {% csrf_token %}
-                  {{ m.update_form.non_field_errors }}
                   {% for field in m.update_form.visible_fields %}
                     <div class="mb-3">
                       {{ field.label_tag }} {{ field }}
-                      {% if field.help_text %}
-                        <div class="form-text">{{ field.help_text }}</div>
-                      {% endif %}
                       {{ field.errors }}
                     </div>
                   {% endfor %}

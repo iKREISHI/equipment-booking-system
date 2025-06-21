@@ -2,11 +2,15 @@ from django.db import transaction
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.utils import timezone
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from apps.equipments.models import InventoryEquipmentStatus
 from apps.maintenance.models import Maintenance
+from config import settings
 from web.maintenance.forms.maintenance import MaintenanceForm
+
+ISO_FMT = "%Y-%m-%dT%H:%M"
 
 
 class MaintenanceListView(LoginRequiredMixin, ListView):
@@ -22,6 +26,23 @@ class MaintenanceListView(LoginRequiredMixin, ListView):
     context_object_name = "maintenances"
     paginate_by = 10
 
+    @staticmethod
+    def _to_iso(dt):
+        """
+        Превращает datetime из модели в строку YYYY-MM-DDTHH:MM,
+        корректно обрабатывая как aware, так и naive варианты.
+        """
+        if dt is None:
+            return ""
+
+        # Если включён USE_TZ и объект aware → делаем localtime()
+        if settings.USE_TZ and timezone.is_aware(dt):
+            dt = timezone.localtime(dt)
+        # Если объект всё ещё aware, но USE_TZ=False (редко) — не трогаем
+        # Если объект naive — тоже не трогаем
+
+        return dt.strftime(ISO_FMT)
+
     def get_queryset(self):
         qs = super().get_queryset().filter(assigned_by__isnull=False)
         if self.request.user.is_superuser:
@@ -29,12 +50,18 @@ class MaintenanceListView(LoginRequiredMixin, ListView):
         return qs.filter(reporter_by_id=self.request.user.id)
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['create_form'] = MaintenanceForm()
-        for m in context['page_obj'].object_list:
-            # здесь уже будет корректный initial для дат
-            m.update_form = MaintenanceForm(instance=m)
-        return context
+        ctx = super().get_context_data(**kwargs)
+        ctx["create_form"] = MaintenanceForm()
+
+        for m in ctx["page_obj"].object_list:
+            m.update_form = MaintenanceForm(
+                instance=m,
+                initial={
+                    "start_time": self._to_iso(m.start_time),
+                    "end_time": self._to_iso(m.end_time),
+                },
+            )
+        return ctx
 
 
 class MaintenanceCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
