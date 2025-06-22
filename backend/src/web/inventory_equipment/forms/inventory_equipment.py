@@ -24,12 +24,12 @@ class InventoryEquipmentForm(forms.ModelForm):
         max_length=100
     )
     inventory_number = forms.CharField(
-        label="Штрихкод*",
+        label="Штрихкод",
         widget=forms.TextInput(attrs={
             "class": "form-control",
             "placeholder": "Введите штрихкод"
         }),
-        required=True,
+        required=False,
         max_length=32
     )
     count = forms.CharField(

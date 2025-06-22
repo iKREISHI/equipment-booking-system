@@ -29,7 +29,8 @@ class InventoryEquipmentAdmin(admin.ModelAdmin):
         'registration_date',
         'status',
         'location',
-        'count'
+        'count',
+        'owner'
     )
     search_fields = (
         'name',
@@ -55,6 +56,7 @@ class InventoryEquipmentAdmin(admin.ModelAdmin):
                 'status',
                 'location',
                 'count',
+                'owner',
             ),
         }),
     )
