@@ -92,15 +92,15 @@
         <div class="modal-body">
           {# ----- поля формы (оставлены без изменений) ----- #}
           <div class="row">
-            <div class="col-md-6 mb-3">
-              <label for="id_owner_create" class="form-label">Владелец*</label>
-              <select class="form-select" name="owner" id="id_owner_create" required>
-                <option value="" disabled selected>— Выберите владельца —</option>
-                {% for user in users %}
-                  <option value="{{ user.id }}">{{ user.get_full_name }}</option>
-                {% endfor %}
-              </select>
-            </div>
+{#            <div class="col-md-6 mb-3 hidden">#}
+{#              <label for="id_owner_create" class="form-label">Владелец*</label>#}
+{#              <select class="form-select" name="owner" id="id_owner_create" required>#}
+{#                <option value="" disabled selected>— Выберите владельца —</option>#}
+{#                {% for user in users %}#}
+{#                  <option value="{{ user.id }}">{{ user.get_full_name }}</option>#}
+{#                {% endfor %}#}
+{#              </select>#}
+{#            </div>#}
 
             <div class="col-md-6 mb-3">
               <label for="id_name_create" class="form-label">Название*</label>
@@ -233,16 +233,6 @@
 
                 <div class="modal-body">
                   <div class="row">
-                    <div class="col-md-6 mb-3">
-                      <label for="id_owner_{{ equipment.id }}" class="form-label">Владелец*</label>
-                      <select name="owner" id="id_owner_{{ equipment.id }}" class="form-select" required>
-                        {% for user in users %}
-                          <option value="{{ user.id }}" {% if user.id == equipment.owner_id %}selected{% endif %}>
-                            {{ user.get_full_name }}
-                          </option>
-                        {% endfor %}
-                      </select>
-                    </div>
 
                     <div class="col-md-6 mb-3">
                       <label for="id_name_{{ equipment.id }}" class="form-label">Название*</label>
