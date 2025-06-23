@@ -48,7 +48,8 @@ class ReservationListView(LoginRequiredMixin,
 
     # --- выборка ---------------------------------------------------------------
     def get_queryset(self):
-        qs = super().get_queryset().filter(assigned_by__isnull=False)
+        qs = (super().get_queryset().filter(assigned_by__isnull=False)
+              .exclude(status=3))
         if self.request.user.is_superuser:
             return qs
         return qs.filter(renter_id=self.request.user.id)
@@ -93,7 +94,16 @@ class ReservationCreateView(LoginRequiredMixin,
         if (self.request.user.is_superuser or
                 self.request.user.has_perm("reservations.change_reservation")):
             reservation.assigned_by = self.request.user
+            reservation.status = 2
         reservation.save()
+        equipment = reservation.equipment.status
+
+        status, _ = InventoryEquipmentStatus.objects.get_or_create(
+            name="Забронировано"
+        )
+        if equipment:
+            equipment.status = status
+            equipment.save()
         messages.success(self.request, "Бронирование успешно создано.")
         return super().form_valid(form)
 
@@ -130,7 +140,16 @@ class ReservationUpdateView(LoginRequiredMixin,
 
     def form_valid(self, form):
         reservation = form.save()
-        ReservationCreateView._update_equipment_status(reservation)
+        # ReservationCreateView._update_equipment_status(reservation)
+        if form.cleaned_data["actual_return_time"]:
+            reservation.status = 3
+            equipment = reservation.equipment
+            status, _ = InventoryEquipmentStatus.objects.get_or_create(
+                name="Доступно"
+            )
+            if equipment:
+                equipment.status = status
+                equipment.save()
         messages.success(self.request, "Бронирование обновлено.")
         return super().form_valid(form)
 
