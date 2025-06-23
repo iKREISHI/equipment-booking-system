@@ -20,6 +20,10 @@ class InventoryEquipmentListView(LoginRequiredMixin, ListView):
     context_object_name = "equipments"
     paginate_by = 10  # количество элементов на странице
 
+    def get_queryset(self):
+        qs = InventoryEquipment.objects.order_by("name")
+        return qs
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Пустая форма для создания нового оборудования
