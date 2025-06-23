@@ -96,7 +96,7 @@ class ReservationCreateView(LoginRequiredMixin,
             reservation.assigned_by = self.request.user
             reservation.status = 2
         reservation.save()
-        equipment = reservation.equipment.status
+        equipment = reservation.equipment
 
         status, _ = InventoryEquipmentStatus.objects.get_or_create(
             name="Забронировано"
