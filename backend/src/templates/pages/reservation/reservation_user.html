@@ -32,6 +32,8 @@
               <span class="text-danger">Отклонено</span>
             {% elif reservation.status == 2 %}
               <span class="text-success">Одобрено</span>
+            {% elif reservation.status == 3 %}
+              <span class="text-hide">Завершено</span>
             {% endif %}
           </td>
           <td>
